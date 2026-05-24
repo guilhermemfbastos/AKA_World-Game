@@ -99,15 +99,26 @@
                 </div>
             </div>
 
-            <!-- TELA DE GAME OVER -->
-            <div id="screen-gameover" class="absolute inset-0 bg-red-950/95 hidden flex-col items-center justify-center p-6 text-center">
+            <!-- TELA DE GAME OVER (Melhorada para gerenciar Saves corretamente) -->
+            <div id="screen-gameover" class="absolute inset-0 bg-red-950/95 hidden flex-col items-center justify-center p-6 text-center z-30">
                 <h1 class="text-3xl md:text-5xl text-red-500 font-bold mb-4 animate-bounce">FIM DE JOGO</h1>
                 <p class="text-xs md:text-sm text-gray-300 max-w-md mb-8 leading-relaxed">
                     Bilo Ban foi derrotado! O mal de ANTIAKA triunfou e dominou a Base do Bem do Deus AKA...
                 </p>
-                <button id="btn-restart" class="btn-retro px-8 py-4 rounded-xl text-sm md:text-md font-bold">
-                    TENTAR NOVAMENTE
-                </button>
+                <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
+                    <!-- Botão para Continuar do save do nível correspondente -->
+                    <button id="btn-retry-save" class="hidden btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold text-black border-b-emerald-800" style="background-color: #10b981; border-bottom: 6px solid #047857;">
+                        CONTINUAR FASE <span id="gameover-continue-lvl">1</span>
+                    </button>
+                    <!-- Botão de Recomeçar do zero -->
+                    <button id="btn-restart" class="btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold">
+                        RECOMEÇAR DO ZERO
+                    </button>
+                    <!-- Botão de Voltar ao menu principal -->
+                    <button id="btn-menu-back" class="btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold bg-gray-700 text-white border-b-gray-900" style="background-color: #4b5563; border-bottom: 6px solid #1f2937;">
+                        VOLTAR AO MENU
+                    </button>
+                </div>
             </div>
 
             <!-- TELA DE VITÓRIA FINAL -->
@@ -404,6 +415,10 @@
                             lives: data.lives || 3
                         };
                         showContinueButton(savedProgress.currentLevel);
+                    } else {
+                        // Se o nível salvo for o primeiro, oculta o botão de continuar
+                        const btnContinue = document.getElementById('btn-continue');
+                        if (btnContinue) btnContinue.classList.add('hidden');
                     }
                 }
             } catch (err) {
@@ -452,6 +467,8 @@
         const btnContinue = document.getElementById('btn-continue');
         const btnStart = document.getElementById('btn-start');
         const btnRestart = document.getElementById('btn-restart');
+        const btnRetrySave = document.getElementById('btn-retry-save');
+        const btnMenuBack = document.getElementById('btn-menu-back');
         const btnPlayAgain = document.getElementById('btn-play-again');
 
         // BOTÕES MOBILE
@@ -1105,14 +1122,17 @@
             }
         }
 
-        // ENTRADA NO MENU PRINCIPAL
-        function showMenu() {
+        // ENTRADA NO MENU PRINCIPAL (Melhorado para verificar progresso em nuvem)
+        async function showMenu() {
             gameState = 'MENU';
             sfx.stopBGM();
             hud.classList.add('hidden');
             screenMenu.style.display = 'flex';
             screenGameover.style.display = 'none';
             screenVictory.style.display = 'none';
+
+            // Garante que o botão de continuar sincronize ao retornar
+            await loadProgressFromCloud();
         }
 
         // INÍCIO DO JOGO (NOVA JORNADA)
@@ -1164,6 +1184,21 @@
             gameState = 'GAMEOVER';
             sfx.stopBGM(); // Pausa música dramática no Game Over
             screenGameover.style.display = 'flex';
+
+            // Atualiza o botão de continuar dentro da tela de Game Over
+            if (savedProgress && savedProgress.currentLevel > 1) {
+                const gameoverLvlTxt = document.getElementById('gameover-continue-lvl');
+                if (gameoverLvlTxt) {
+                    gameoverLvlTxt.innerText = savedProgress.currentLevel;
+                }
+                if (btnRetrySave) {
+                    btnRetrySave.classList.remove('hidden');
+                }
+            } else {
+                if (btnRetrySave) {
+                    btnRetrySave.classList.add('hidden');
+                }
+            }
         }
 
         // VITÓRIA TOTAL
@@ -1179,6 +1214,8 @@
         btnStart.addEventListener('click', startGame);
         btnContinue.addEventListener('click', continueGame);
         btnRestart.addEventListener('click', startGame);
+        btnRetrySave.addEventListener('click', continueGame);
+        btnMenuBack.addEventListener('click', showMenu);
         btnPlayAgain.addEventListener('click', startGame);
 
         // LOOP PRINCIPAL DO JOGO (GAME LOOP)
