@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Put your HTML text here<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
             background-color: #f59e0b;
             color: #000;
             border-bottom: 6px solid #b45309;
-            transition: all 0.1s ease;
+            transition: all 0.2s ease-in-out;
         }
 
         .btn-retro:active {
@@ -162,7 +162,7 @@
 
         <!-- Barra informativa de atalhos para PC -->
         <div class="hidden md:block bg-gray-950 text-center text-[10px] text-gray-500 py-2">
-            Controles: Use [← / →] para andar e [↑ / Espaço] para pular.
+            Controles: Use [← / → / Analógico] para andar e [↑ / Espaço / Botão A] para pular.
         </div>
     </div>
 
@@ -421,6 +421,7 @@
                     if (data && data.currentLevel > 1) {
                         savedProgress = data;
                         showContinueButton(savedProgress.currentLevel);
+                        refreshFocusableButtons();
                     }
                 } catch (e) {
                     console.error("Erro ao ler save local:", e);
@@ -441,6 +442,7 @@
                         };
                         showContinueButton(savedProgress.currentLevel);
                         localStorage.setItem('aka_world_bilo_ban_save', JSON.stringify(savedProgress));
+                        refreshFocusableButtons();
                     }
                 }
             } catch (err) {
@@ -468,6 +470,91 @@
             if (btnContinue && txt) {
                 txt.innerText = lvl;
                 btnContinue.classList.remove('hidden');
+            }
+        }
+
+        // SISTEMA DE NAVEGAÇÃO POR CONTROLADORES (TV BOX & GAMEPADS)
+        let focusableButtons = [];
+        let focusedIndex = 0;
+        let lastGamepadInputTime = 0;
+        const gamepadKeys = { left: false, right: false, jump: false, up: false, down: false, action: false };
+
+        function refreshFocusableButtons() {
+            focusableButtons = [];
+            let activeScreen = null;
+
+            if (gameState === 'MENU') {
+                activeScreen = screenMenu;
+            } else if (gameState === 'GAMEOVER') {
+                activeScreen = screenGameover;
+            } else if (gameState === 'VICTORY') {
+                activeScreen = screenVictory;
+            }
+
+            if (activeScreen) {
+                const btns = activeScreen.querySelectorAll('button');
+                btns.forEach(btn => {
+                    if (!btn.classList.contains('hidden') && btn.style.display !== 'none') {
+                        focusableButtons.push(btn);
+                    }
+                });
+            }
+
+            focusedIndex = 0;
+            applyVisualFocus();
+        }
+
+        function applyVisualFocus() {
+            // Remove realce de foco antigo de todos os botões do DOM
+            document.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-white', 'scale-105', 'brightness-110');
+            });
+
+            // Aplica efeito visual moderno de seleção no botão ativo atual
+            if (focusableButtons.length > 0) {
+                if (focusedIndex < 0) focusedIndex = 0;
+                if (focusedIndex >= focusableButtons.length) focusedIndex = focusableButtons.length - 1;
+
+                const activeBtn = focusableButtons[focusedIndex];
+                activeBtn.classList.add('ring-4', 'ring-white', 'scale-105', 'brightness-110');
+            }
+        }
+
+        function pollGamepad() {
+            const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+            let gp = null;
+            for (let i = 0; i < gamepads.length; i++) {
+                if (gamepads[i]) {
+                    gp = gamepads[i];
+                    break;
+                }
+            }
+
+            // Reseta entradas virtuais do controle a cada ciclo físico
+            gamepadKeys.left = false;
+            gamepadKeys.right = false;
+            gamepadKeys.jump = false;
+            gamepadKeys.up = false;
+            gamepadKeys.down = false;
+            gamepadKeys.action = false;
+
+            if (gp) {
+                const threshold = 0.5;
+                const getButton = (idx) => gp.buttons[idx] && gp.buttons[idx].pressed;
+
+                // Analógico Esquerdo & D-Pad para os lados
+                if (gp.axes[0] < -threshold || getButton(14)) gamepadKeys.left = true;
+                if (gp.axes[0] > threshold || getButton(15)) gamepadKeys.right = true;
+
+                // Analógico Esquerdo & D-Pad para Cima e Baixo
+                if (gp.axes[1] < -threshold || getButton(12)) gamepadKeys.up = true;
+                if (gp.axes[1] > threshold || getButton(13)) gamepadKeys.down = true;
+
+                // Botões de Ação do Gamepad (Botões A/B/X/Y ou Cross/Circle)
+                if (getButton(0) || getButton(1) || getButton(2)) {
+                    gamepadKeys.jump = true;
+                    gamepadKeys.action = true;
+                }
             }
         }
 
@@ -518,11 +605,34 @@
         let bossProjectiles = [];
         let particles = [];
 
-        // CONTROLES DE ENTRADA (TECLADO)
+        // CONTROLES DE ENTRADA (TECLADO & TV REMOTE KEYS)
         window.addEventListener('keydown', (e) => {
             keys[e.code] = true;
-            if (e.code === 'ArrowUp' || e.code === 'Space') {
-                e.preventDefault(); // Evita scroll do navegador
+            if (gameState === 'PLAYING') {
+                if (e.code === 'ArrowUp' || e.code === 'Space') {
+                    e.preventDefault(); // Evita scroll do navegador
+                }
+            } else {
+                // Intercepta e processa controles de navegação dos menus da TV
+                if (e.code === 'ArrowUp' || e.code === 'KeyW') {
+                    e.preventDefault();
+                    focusedIndex--;
+                    if (focusedIndex < 0) focusedIndex = focusableButtons.length - 1;
+                    applyVisualFocus();
+                    sfx.playJump();
+                } else if (e.code === 'ArrowDown' || e.code === 'KeyS') {
+                    e.preventDefault();
+                    focusedIndex++;
+                    if (focusedIndex >= focusableButtons.length) focusedIndex = 0;
+                    applyVisualFocus();
+                    sfx.playJump();
+                } else if (e.code === 'Enter' || e.code === 'Space') {
+                    e.preventDefault();
+                    if (focusableButtons[focusedIndex]) {
+                        sfx.playCoin();
+                        focusableButtons[focusedIndex].click();
+                    }
+                }
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -562,14 +672,14 @@
             }
 
             update() {
-                // Movimento Horizontal
+                // Movimento Horizontal (Unificado com suporte a controle USB/Bluetooth)
                 let moving = false;
-                if (keys['ArrowLeft'] || keys['KeyA'] || touchKeys.left) {
+                if (keys['ArrowLeft'] || keys['KeyA'] || touchKeys.left || gamepadKeys.left) {
                     this.vx = -this.speed;
                     this.isFacingLeft = true;
                     moving = true;
                 }
-                if (keys['ArrowRight'] || keys['KeyD'] || touchKeys.right) {
+                if (keys['ArrowRight'] || keys['KeyD'] || touchKeys.right || gamepadKeys.right) {
                     this.vx = this.speed;
                     this.isFacingLeft = false;
                     moving = true;
@@ -582,7 +692,7 @@
                 this.vy += GRAVITY;
 
                 // Salto (Pulo responsivo: soltar o botão corta o pulo pela metade)
-                if ((keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump) && this.grounded) {
+                if ((keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump || gamepadKeys.jump) && this.grounded) {
                     this.vy = -this.jumpStrength;
                     this.grounded = false;
                     sfx.playJump();
@@ -591,7 +701,7 @@
                 }
 
                 // Menos altura de pulo se o jogador liberar a tecla de pulo no ar
-                if (!(keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump) && this.vy < -3) {
+                if (!(keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump || gamepadKeys.jump) && this.vy < -3) {
                     this.vy = -3;
                 }
 
@@ -1155,6 +1265,7 @@
 
             // Garante que o botão de continuar sincronize ao retornar
             await loadProgressFromCloud();
+            refreshFocusableButtons();
         }
 
         // INÍCIO DO JOGO (NOVA JORNADA)
@@ -1223,6 +1334,8 @@
                     btnRetrySave.classList.add('hidden');
                 }
             }
+
+            refreshFocusableButtons();
         }
 
         // VITÓRIA TOTAL
@@ -1232,6 +1345,8 @@
             victoryFinalScore.innerText = `PONTOS FINAIS: ${String(score).padStart(5, '0')}`;
             screenVictory.style.display = 'flex';
             sfx.playWin();
+
+            refreshFocusableButtons();
         }
 
         // AÇÕES DOS BOTÕES DE UI
@@ -1244,6 +1359,7 @@
 
         // LOOP PRINCIPAL DO JOGO (GAME LOOP)
         function gameLoop() {
+            pollGamepad(); // Lê o estado do controle físico conectado a cada ciclo
             update();
             render();
             requestAnimationFrame(gameLoop);
@@ -1251,7 +1367,35 @@
 
         // ATUALIZAÇÃO DA LÓGICA DO JOGO
         function update() {
-            if (gameState !== 'PLAYING') return;
+            // Se estiver em telas de menu, processa a navegação via gamepad de forma cadenciada
+            if (gameState !== 'PLAYING') {
+                const now = Date.now();
+                if (now - lastGamepadInputTime > 220) {
+                    let moved = false;
+                    if (gamepadKeys.up) {
+                        focusedIndex--;
+                        if (focusedIndex < 0) focusedIndex = focusableButtons.length - 1;
+                        moved = true;
+                    } else if (gamepadKeys.down) {
+                        focusedIndex++;
+                        if (focusedIndex >= focusableButtons.length) focusedIndex = 0;
+                        moved = true;
+                    }
+
+                    if (moved) {
+                        applyVisualFocus();
+                        sfx.playJump();
+                        lastGamepadInputTime = now;
+                    }
+
+                    if (gamepadKeys.action && focusableButtons[focusedIndex]) {
+                        sfx.playCoin();
+                        focusableButtons[focusedIndex].click();
+                        lastGamepadInputTime = now + 500; // Bloqueio temporário para evitar múltiplos cliques
+                    }
+                }
+                return;
+            }
 
             // 1. Atualizar Jogador
             if (player) {
@@ -1443,6 +1587,7 @@
                 }
             }
             initFirebase();
+            refreshFocusableButtons(); // Inicializa o mapeamento de botões navegáveis por controle
             gameLoop();
         };
 
