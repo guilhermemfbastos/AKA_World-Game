@@ -1,4 +1,4 @@
-Put your HTML text here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -53,9 +53,9 @@ Put your HTML text here<!DOCTYPE html>
     <!-- Container Principal do Jogo -->
     <div class="relative w-full max-w-4xl bg-gray-900 border-4 border-yellow-500 rounded-lg overflow-hidden shadow-2xl flex flex-col">
         
-        <!-- HUD Superior (Durante o jogo) -->
+        <!-- HUD Superior -->
         <div id="hud" class="hidden flex justify-between items-center bg-gray-950 p-3 border-b-4 border-yellow-500 text-[10px] md:text-sm z-10">
-            <div>FASE: <span id="hud-level" class="text-yellow-400">1/50</span></div>
+            <div>FASE: <span id="hud-level" class="text-yellow-400">1-1</span></div>
             <div>VIDAS: <span id="hud-lives" class="text-red-500">❤️ ❤️ ❤️</span></div>
             <div>PONTOS: <span id="hud-score" class="text-green-400">00000</span></div>
         </div>
@@ -70,7 +70,7 @@ Put your HTML text here<!DOCTYPE html>
             </div>
 
             <!-- TELA DE INTRODUÇÃO / MENU -->
-            <div id="screen-menu" class="absolute inset-0 bg-black/90 flex flex-col items-center p-4 md:p-8 text-center justify-between overflow-y-auto">
+            <div id="screen-menu" class="absolute inset-0 bg-black/95 flex flex-col items-center p-4 md:p-8 text-center justify-between overflow-y-auto">
                 <div class="my-auto max-w-2xl">
                     <h1 class="text-2xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 mb-4 animate-pulse">
                         AKA WORLD
@@ -79,19 +79,18 @@ Put your HTML text here<!DOCTYPE html>
                     
                     <!-- Box da História com Scroll -->
                     <div class="story-scroll bg-gray-950/80 border-2 border-yellow-600 rounded p-4 text-left text-[9px] md:text-xs leading-relaxed max-h-48 overflow-y-auto text-gray-300 mb-6">
-                        <p class="text-yellow-400 text-center mb-3 font-bold">A SAGA DO AKA WORLD</p>
+                        <p class="text-yellow-400 text-center mb-3 font-bold">A SAGA DO AKA WORLD (25 NÍVEIS)</p>
                         "Era uma vez, um deus supremo chamado <span class="text-white font-bold">Deus AKA</span>, que criou todo o universo AKA e, principalmente, o <span class="text-white font-bold">AKA World</span>. Para ajudá-lo, AKA criou dois guardiões universais: <span class="text-green-400 font-bold">AKINHA</span> e <span class="text-blue-400 font-bold">AKA MAN</span>.<br><br>
                         Eles cresceram, mas <span class="text-blue-400 font-bold">AKA MAN</span> ficou orgulhoso e incentivou <span class="text-green-400">AKINHA</span> a ir para o lado do mal. Extremamente inocente, <span class="text-green-400">AKINHA</span> aceitou. Sabendo disso, Deus AKA os expulsou do Palácio da Criação.<br><br>
                         <span class="text-blue-400">AKA MAN</span>, por vingança, incentivou <span class="text-green-400">AKINHA</span> a criar o <span class="text-red-500 font-bold">ANTIAKA World</span>. <span class="text-green-400">AKINHA</span> aceitou com tristeza, transformou-se no vilão <span class="text-red-500 font-bold">ANTIAKA</span> e possuiu o AKA World, atormentando as pessoas.<br><br>
-                        Mas Deus AKA não deixou barato: escolheu um humano comum chamado <span class="text-yellow-400 font-bold">Bilo Ban</span> para ser o novo Guardião Espacial. Sabendo disso, <span class="text-red-500 font-bold">ANTIAKA</span> começou a atormentar ainda mais o mundo para atrair Bilo Ban, tentando convencê-lo a se corromper e a revelar onde fica a Base do Bem de AKA."
+                        Mas Deus AKA escolheu um humano comum chamado <span class="text-yellow-400 font-bold">Bilo Ban</span> para ser o novo Guardião Espacial! Explore os 5 mundos místico e limpe as 25 fases procedurais do planeta para expulsar ANTIAKA definitivamente!"
                     </div>
                 </div>
 
                 <!-- Painel de Botões do Menu -->
                 <div class="flex flex-col gap-2 w-full max-w-sm mb-4">
-                    <!-- Botão de Continuar (Só visível se houver progresso salvo) -->
                     <button id="btn-continue" class="hidden btn-retro w-full py-4 rounded-xl text-sm md:text-lg font-bold text-black border-b-emerald-800" style="background-color: #10b981; border-bottom: 6px solid #047857;">
-                        CONTINUAR FASE <span id="continue-lvl-text">1</span>
+                        CONTINUAR MUNDO <span id="continue-lvl-text">1-1</span>
                     </button>
                     <button id="btn-start" class="btn-retro w-full py-4 rounded-xl text-sm md:text-lg font-bold">
                         NOVA JORNADA
@@ -99,22 +98,19 @@ Put your HTML text here<!DOCTYPE html>
                 </div>
             </div>
 
-            <!-- TELA DE GAME OVER (Melhorada para gerenciar Saves corretamente) -->
+            <!-- TELA DE GAME OVER -->
             <div id="screen-gameover" class="absolute inset-0 bg-red-950/95 hidden flex-col items-center justify-center p-6 text-center z-30">
                 <h1 class="text-3xl md:text-5xl text-red-500 font-bold mb-4 animate-bounce">FIM DE JOGO</h1>
                 <p class="text-xs md:text-sm text-gray-300 max-w-md mb-8 leading-relaxed">
                     Bilo Ban foi derrotado! O mal de ANTIAKA triunfou e dominou a Base do Bem do Deus AKA...
                 </p>
                 <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
-                    <!-- Botão para Continuar do save do nível correspondente -->
                     <button id="btn-retry-save" class="hidden btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold text-black border-b-emerald-800" style="background-color: #10b981; border-bottom: 6px solid #047857;">
-                        CONTINUAR FASE <span id="gameover-continue-lvl">1</span>
+                        REENTRAR MUNDO <span id="gameover-continue-lvl">1-1</span>
                     </button>
-                    <!-- Botão de Recomeçar do zero -->
                     <button id="btn-restart" class="btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold">
                         RECOMEÇAR DO ZERO
                     </button>
-                    <!-- Botão de Voltar ao menu principal -->
                     <button id="btn-menu-back" class="btn-retro w-full py-4 rounded-xl text-xs md:text-sm font-bold bg-gray-700 text-white border-b-gray-900" style="background-color: #4b5563; border-bottom: 6px solid #1f2937;">
                         VOLTAR AO MENU
                     </button>
@@ -125,7 +121,7 @@ Put your HTML text here<!DOCTYPE html>
             <div id="screen-victory" class="absolute inset-0 bg-yellow-950/95 hidden flex-col items-center justify-center p-6 text-center">
                 <h1 class="text-3xl md:text-4xl text-yellow-400 font-bold mb-4 animate-pulse">VITÓRIA DO BEM!</h1>
                 <p class="text-xs md:text-sm text-gray-200 max-w-lg mb-8 leading-relaxed">
-                    Incrível! Bilo Ban derrotou o terrível ANTIAKA, libertando a alma de AKINHA e limpando a ganância do AKA World! Deus AKA sorri lá de cima. Você é o verdadeiro Guardião Espacial!
+                    Incrível! Bilo Ban derrotou o terrível ANTIAKA no Mundo 5-5! Você libertou a alma de AKINHA e salvou a Base do Bem do Deus AKA. Você é o verdadeiro Guardião Espacial!
                 </p>
                 <div class="text-xl text-green-400 mb-8" id="victory-final-score">PONTOS: 00000</div>
                 <button id="btn-play-again" class="btn-retro px-8 py-4 rounded-xl text-sm md:text-md font-bold">
@@ -134,41 +130,31 @@ Put your HTML text here<!DOCTYPE html>
             </div>
 
             <!-- ANÚNCIO DE PRÓXIMA FASE (FADE OUT RÁPIDO) -->
-            <div id="screen-nextlevel" class="absolute inset-0 bg-black/80 hidden flex-col items-center justify-center pointer-events-none z-20">
-                <h2 class="text-2xl md:text-4xl text-yellow-400 font-bold mb-2" id="next-level-title">FASE 2</h2>
-                <p class="text-xs text-gray-400">Prepare-se...</p>
+            <div id="screen-nextlevel" class="absolute inset-0 bg-black/90 hidden flex-col items-center justify-center pointer-events-none z-20">
+                <h2 class="text-2xl md:text-4xl text-yellow-400 font-bold mb-2" id="next-level-title">MUNDO 1-2</h2>
+                <p class="text-xs text-gray-400" id="next-level-subtitle">Planície Cósmica</p>
             </div>
 
         </div>
 
-        <!-- CONTROLES PARA DISPOSITIVOS MÓVEIS (Sensível ao Toque) -->
+        <!-- CONTROLES PARA DISPOSITIVOS MÓVEIS -->
         <div id="mobile-controls" class="grid grid-cols-2 bg-gray-950 p-4 border-t-4 border-yellow-500 gap-4 md:hidden">
-            <!-- Direcionais Esquerda / Direita -->
             <div class="flex gap-4 justify-start">
-                <button id="btn-left" class="bg-gray-800 active:bg-yellow-600 border-2 border-gray-600 rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold select-none active:scale-95">
-                    ◀
-                </button>
-                <button id="btn-right" class="bg-gray-800 active:bg-yellow-600 border-2 border-gray-600 rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold select-none active:scale-95">
-                    ▶
-                </button>
+                <button id="btn-left" class="bg-gray-800 active:bg-yellow-600 border-2 border-gray-600 rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold select-none active:scale-95">◀</button>
+                <button id="btn-right" class="bg-gray-800 active:bg-yellow-600 border-2 border-gray-600 rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold select-none active:scale-95">▶</button>
             </div>
-            <!-- Botão de Pulo -->
             <div class="flex justify-end">
-                <button id="btn-jump" class="bg-yellow-500 active:bg-yellow-700 text-black border-2 border-yellow-300 rounded-xl w-20 h-16 flex items-center justify-center text-xl font-bold select-none active:scale-95">
-                    PULAR
-                </button>
+                <button id="btn-jump" class="bg-yellow-500 active:bg-yellow-700 text-black border-2 border-yellow-300 rounded-xl w-20 h-16 flex items-center justify-center text-xl font-bold select-none active:scale-95">PULAR</button>
             </div>
         </div>
 
-        <!-- Barra informativa de atalhos para PC -->
         <div class="hidden md:block bg-gray-950 text-center text-[10px] text-gray-500 py-2">
-            Controles: Use [← / → / Analógico] para andar e [↑ / Espaço / Botão A] para pular.
+            Controles: Use [← / → / Analógico] para andar e [↑ / Espaço / Botão A] para pular. Setas navegam no menu.
         </div>
     </div>
 
     <!-- Script de Lógica do Jogo -->
     <script type="module">
-        // Importando Firebase de forma limpa seguindo as diretrizes
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -179,8 +165,36 @@ Put your HTML text here<!DOCTYPE html>
         const TILE_SIZE = 40;
         const CANVAS_WIDTH = 800;
         const CANVAS_HEIGHT = 440;
+        const MAX_LEVELS = 25; // Reduzido de 50 para 25 fases
 
-        // INICIALIZAÇÃO DE ÁUDIO RETRÔ (Web Audio API para evitar arquivos de som externos)
+        // MUNDOS E ESTILOS
+        const WORLDS = [
+            { id: 1, name: "Planície Cósmica", sky: ["#60a5fa", "#93c5fd"], ground: "#4ade80" },
+            { id: 2, name: "Deserto de Sírius", sky: ["#f59e0b", "#fde047"], ground: "#fbbf24" },
+            { id: 3, name: "Cavernas de Cristal", sky: ["#1e1b4b", "#090514"], ground: "#8b5cf6" },
+            { id: 4, name: "Planalto Celestial", sky: ["#0ea5e9", "#bae6fd"], ground: "#ffffff" },
+            { id: 5, name: "Castelo de ANTIAKA", sky: ["#111827", "#7f1d1d"], ground: "#374151" }
+        ];
+
+        function getWorldAndLevel(lvlNum) {
+            const worldIdx = Math.floor((lvlNum - 1) / 5);
+            const subLvl = ((lvlNum - 1) % 5) + 1;
+            const worldInfo = WORLDS[Math.min(worldIdx, WORLDS.length - 1)];
+            return {
+                worldNum: worldIdx + 1,
+                subLevel: subLvl,
+                name: worldInfo.name,
+                sky: worldInfo.sky,
+                ground: worldInfo.ground
+            };
+        }
+
+        function formatLevelString(lvlNum) {
+            const wl = getWorldAndLevel(lvlNum);
+            return `${wl.worldNum}-${wl.subLevel}`;
+        }
+
+        // SISTEMA DE ÁUDIO RETRÔ
         class SoundEffects {
             constructor() {
                 this.ctx = null;
@@ -188,7 +202,6 @@ Put your HTML text here<!DOCTYPE html>
                 this.isMusicPlaying = false;
                 this.currentBeat = 0;
 
-                // Sequências de Notas 8-bit estilo Retro NES (32 compassos de diversão)
                 this.melody = [
                     'E4', 'G4', 'C5', 'G4', 'A4', 'C5', 'A4', 'G4',
                     'F4', 'A4', 'D5', 'A4', 'G4', 'B4', 'D5', 'B4',
@@ -222,7 +235,7 @@ Put your HTML text here<!DOCTYPE html>
                 this.isMusicPlaying = true;
                 this.currentBeat = 0;
 
-                const stepDuration = 0.20; // Andamento rítmico alegre de 200ms
+                const stepDuration = 0.22;
                 const playStep = () => {
                     if (!this.isMusicPlaying) return;
 
@@ -230,7 +243,6 @@ Put your HTML text here<!DOCTYPE html>
                     const melNote = this.melody[this.currentBeat % this.melody.length];
                     const bassNote = this.bass[this.currentBeat % this.bass.length];
 
-                    // Sintetizador do Baixo (Onda Triangular macia)
                     const bassFreq = this.getNoteFreq(bassNote);
                     if (bassFreq > 0) {
                         let osc = this.ctx.createOscillator();
@@ -245,7 +257,6 @@ Put your HTML text here<!DOCTYPE html>
                         osc.stop(time + stepDuration - 0.01);
                     }
 
-                    // Sintetizador de Leads da Melodia (Onda Quadrada estridente)
                     const melFreq = this.getNoteFreq(melNote);
                     if (melFreq > 0 && this.currentBeat % 2 === 0) {
                         let osc = this.ctx.createOscillator();
@@ -254,7 +265,7 @@ Put your HTML text here<!DOCTYPE html>
                         gain.connect(this.ctx.destination);
                         osc.type = 'square';
                         osc.frequency.setValueAtTime(melFreq, time);
-                        gain.gain.setValueAtTime(0.015, time); // Volume harmônico equilibrado
+                        gain.gain.setValueAtTime(0.012, time);
                         gain.gain.exponentialRampToValueAtTime(0.002, time + stepDuration * 2 - 0.04);
                         osc.start(time);
                         osc.stop(time + stepDuration * 2 - 0.02);
@@ -280,7 +291,7 @@ Put your HTML text here<!DOCTYPE html>
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(150, this.ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
                 osc.start(); osc.stop(this.ctx.currentTime + 0.15);
             }
@@ -290,9 +301,9 @@ Put your HTML text here<!DOCTYPE html>
                 let gain = this.ctx.createGain();
                 osc.connect(gain); gain.connect(this.ctx.destination);
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime); // C5
-                osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08); // E5
-                gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+                osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
                 osc.start(); osc.stop(this.ctx.currentTime + 0.25);
             }
@@ -304,7 +315,7 @@ Put your HTML text here<!DOCTYPE html>
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(120, this.ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.12);
-                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
                 osc.start(); osc.stop(this.ctx.currentTime + 0.12);
             }
@@ -316,7 +327,7 @@ Put your HTML text here<!DOCTYPE html>
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(300, this.ctx.currentTime);
                 osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.25, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
                 osc.start(); osc.stop(this.ctx.currentTime + 0.3);
             }
@@ -328,7 +339,7 @@ Put your HTML text here<!DOCTYPE html>
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(80, this.ctx.currentTime);
                 osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
                 osc.start(); osc.stop(this.ctx.currentTime + 0.25);
             }
@@ -342,7 +353,7 @@ Put your HTML text here<!DOCTYPE html>
                     osc.connect(gain); gain.connect(this.ctx.destination);
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                    gain.gain.setValueAtTime(0.15, now + idx * 0.08);
+                    gain.gain.setValueAtTime(0.12, now + idx * 0.08);
                     gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
                     osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
                 });
@@ -350,7 +361,7 @@ Put your HTML text here<!DOCTYPE html>
         }
         const sfx = new SoundEffects();
 
-        // CONFIGURAÇÕES FIREBASE / PERSISTÊNCIA NA NUVEM DEUS AKA
+        // PERSISTÊNCIA NA NUVEM DEUS AKA
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         let db = null;
         let auth = null;
@@ -365,7 +376,6 @@ Put your HTML text here<!DOCTYPE html>
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Autenticação prévia obrigatória (Regra 3)
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
                 } else {
@@ -383,15 +393,12 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // SALVAR PROGRESSO NA NUVEM (Regras 1 & 3 de Segurança)
         async function saveProgressToCloud() {
-            // Sincroniza o estado de memória local imediatamente
             savedProgress.currentLevel = currentLevel;
             savedProgress.score = score;
             savedProgress.lives = lives;
 
-            // Salva no LocalStorage para backup instantâneo off-line
-            localStorage.setItem('aka_world_bilo_ban_save', JSON.stringify(savedProgress));
+            localStorage.setItem('aka_world_bilo_ban_save_25', JSON.stringify(savedProgress));
 
             if (!db || !currentUser) {
                 showCloudIndicator("💾 Progresso Salvo!");
@@ -411,10 +418,8 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // CARREGAR PROGRESSO DA NUVEM (Regras 1 & 3 de Segurança)
         async function loadProgressFromCloud() {
-            // Tenta recuperar do LocalStorage primeiro para resposta imediata
-            const localSave = localStorage.getItem('aka_world_bilo_ban_save');
+            const localSave = localStorage.getItem('aka_world_bilo_ban_save_25');
             if (localSave) {
                 try {
                     const data = JSON.parse(localSave);
@@ -441,7 +446,7 @@ Put your HTML text here<!DOCTYPE html>
                             lives: data.lives || 3
                         };
                         showContinueButton(savedProgress.currentLevel);
-                        localStorage.setItem('aka_world_bilo_ban_save', JSON.stringify(savedProgress));
+                        localStorage.setItem('aka_world_bilo_ban_save_25', JSON.stringify(savedProgress));
                         refreshFocusableButtons();
                     }
                 }
@@ -450,7 +455,6 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // Mostrar indicador flutuante de save
         function showCloudIndicator(message) {
             const indicator = document.getElementById('cloud-indicator');
             const indicatorText = document.getElementById('cloud-indicator-text');
@@ -463,17 +467,16 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // Exibir opção de Continuar no Menu
         function showContinueButton(lvl) {
             const btnContinue = document.getElementById('btn-continue');
             const txt = document.getElementById('continue-lvl-text');
             if (btnContinue && txt) {
-                txt.innerText = lvl;
+                txt.innerText = formatLevelString(lvl);
                 btnContinue.classList.remove('hidden');
             }
         }
 
-        // SISTEMA DE NAVEGAÇÃO POR CONTROLADORES (TV BOX & GAMEPADS)
+        // SISTEMA DE NAVEGAÇÃO POR BOTOES (ANDROID TV / REMOTE / KEYBOARD)
         let focusableButtons = [];
         let focusedIndex = 0;
         let lastGamepadInputTime = 0;
@@ -505,12 +508,10 @@ Put your HTML text here<!DOCTYPE html>
         }
 
         function applyVisualFocus() {
-            // Remove realce de foco antigo de todos os botões do DOM
             document.querySelectorAll('button').forEach(btn => {
                 btn.classList.remove('ring-4', 'ring-white', 'scale-105', 'brightness-110');
             });
 
-            // Aplica efeito visual moderno de seleção no botão ativo atual
             if (focusableButtons.length > 0) {
                 if (focusedIndex < 0) focusedIndex = 0;
                 if (focusedIndex >= focusableButtons.length) focusedIndex = focusableButtons.length - 1;
@@ -530,7 +531,6 @@ Put your HTML text here<!DOCTYPE html>
                 }
             }
 
-            // Reseta entradas virtuais do controle a cada ciclo físico
             gamepadKeys.left = false;
             gamepadKeys.right = false;
             gamepadKeys.jump = false;
@@ -542,15 +542,12 @@ Put your HTML text here<!DOCTYPE html>
                 const threshold = 0.5;
                 const getButton = (idx) => gp.buttons[idx] && gp.buttons[idx].pressed;
 
-                // Analógico Esquerdo & D-Pad para os lados
                 if (gp.axes[0] < -threshold || getButton(14)) gamepadKeys.left = true;
                 if (gp.axes[0] > threshold || getButton(15)) gamepadKeys.right = true;
 
-                // Analógico Esquerdo & D-Pad para Cima e Baixo
                 if (gp.axes[1] < -threshold || getButton(12)) gamepadKeys.up = true;
                 if (gp.axes[1] > threshold || getButton(13)) gamepadKeys.down = true;
 
-                // Botões de Ação do Gamepad (Botões A/B/X/Y ou Cross/Circle)
                 if (getButton(0) || getButton(1) || getButton(2)) {
                     gamepadKeys.jump = true;
                     gamepadKeys.action = true;
@@ -571,6 +568,7 @@ Put your HTML text here<!DOCTYPE html>
         const screenVictory = document.getElementById('screen-victory');
         const screenNextLevel = document.getElementById('screen-nextlevel');
         const nextLevelTitle = document.getElementById('next-level-title');
+        const nextLevelSubtitle = document.getElementById('next-level-subtitle');
         const victoryFinalScore = document.getElementById('victory-final-score');
 
         const btnContinue = document.getElementById('btn-continue');
@@ -580,13 +578,12 @@ Put your HTML text here<!DOCTYPE html>
         const btnMenuBack = document.getElementById('btn-menu-back');
         const btnPlayAgain = document.getElementById('btn-play-again');
 
-        // BOTÕES MOBILE
         const btnLeft = document.getElementById('btn-left');
         const btnRight = document.getElementById('btn-right');
         const btnJump = document.getElementById('btn-jump');
 
         // ESTADO GLOBAL DO JOGO
-        let gameState = 'MENU'; // MENU, PLAYING, GAMEOVER, VICTORY
+        let gameState = 'MENU';
         let currentLevel = 1;
         let lives = 3;
         let score = 0;
@@ -601,19 +598,20 @@ Put your HTML text here<!DOCTYPE html>
         let spikes = [];
         let coins = [];
         let enemies = [];
+        let firebars = []; // Novo obstáculo giratório de fogo
         let boss = null;
         let bossProjectiles = [];
         let particles = [];
+        let gameClouds = []; // Nuvens decorativas de fundo
 
-        // CONTROLES DE ENTRADA (TECLADO & TV REMOTE KEYS)
+        // CONTROLES DE ENTRADA (TECLADO / TV REMOTE KEYS)
         window.addEventListener('keydown', (e) => {
             keys[e.code] = true;
             if (gameState === 'PLAYING') {
                 if (e.code === 'ArrowUp' || e.code === 'Space') {
-                    e.preventDefault(); // Evita scroll do navegador
+                    e.preventDefault();
                 }
             } else {
-                // Intercepta e processa controles de navegação dos menus da TV
                 if (e.code === 'ArrowUp' || e.code === 'KeyW') {
                     e.preventDefault();
                     focusedIndex--;
@@ -639,12 +637,12 @@ Put your HTML text here<!DOCTYPE html>
             keys[e.code] = false;
         });
 
-        // CONTROLES DE ENTRADA (TOQUE NO CELULAR)
+        // TOQUE NO CELULAR
         const setupMobileButton = (btn, action) => {
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
                 touchKeys[action] = true;
-                sfx.init(); // Inicializa o áudio se necessário
+                sfx.init();
             });
             btn.addEventListener('touchend', (e) => {
                 e.preventDefault();
@@ -655,7 +653,7 @@ Put your HTML text here<!DOCTYPE html>
         setupMobileButton(btnRight, 'right');
         setupMobileButton(btnJump, 'jump');
 
-        // CLASSE DO JOGADOR
+        // CLASSE DO JOGADOR - CARTOON PIXEL ART
         class Player {
             constructor(x, y) {
                 this.x = x;
@@ -669,88 +667,101 @@ Put your HTML text here<!DOCTYPE html>
                 this.grounded = false;
                 this.invincibilityFrames = 0;
                 this.isFacingLeft = false;
+                this.walkCycle = 0;
             }
 
             update() {
-                // Movimento Horizontal (Unificado com suporte a controle USB/Bluetooth)
                 let moving = false;
                 if (keys['ArrowLeft'] || keys['KeyA'] || touchKeys.left || gamepadKeys.left) {
                     this.vx = -this.speed;
                     this.isFacingLeft = true;
                     moving = true;
+                    this.walkCycle += 0.2;
                 }
                 if (keys['ArrowRight'] || keys['KeyD'] || touchKeys.right || gamepadKeys.right) {
                     this.vx = this.speed;
                     this.isFacingLeft = false;
                     moving = true;
+                    this.walkCycle += 0.2;
                 }
                 if (!moving) {
                     this.vx *= FRICTION;
+                    this.walkCycle = 0;
                 }
 
-                // Aplicar gravidade
                 this.vy += GRAVITY;
 
-                // Salto (Pulo responsivo: soltar o botão corta o pulo pela metade)
                 if ((keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump || gamepadKeys.jump) && this.grounded) {
                     this.vy = -this.jumpStrength;
                     this.grounded = false;
                     sfx.playJump();
-                    // Cria uma poeirinha ao pular
                     createExplosionParticles(this.x + this.width/2, this.y + this.height, '#e5e7eb', 4);
                 }
 
-                // Menos altura de pulo se o jogador liberar a tecla de pulo no ar
                 if (!(keys['ArrowUp'] || keys['KeyW'] || keys['Space'] || touchKeys.jump || gamepadKeys.jump) && this.vy < -3) {
                     this.vy = -3;
                 }
 
-                // Limite máximo de queda
                 if (this.vy > 12) this.vy = 12;
 
-                // Atualizar posição vertical primeiro
                 this.y += this.vy;
                 this.checkVerticalCollisions();
 
-                // Atualizar posição horizontal depois
                 this.x += this.vx;
                 this.checkHorizontalCollisions();
 
-                // Limites do mapa à esquerda
                 if (this.x < 0) {
                     this.x = 0;
                     this.vx = 0;
                 }
 
-                // Cair fora do cenário (Buraco)
                 if (this.y > CANVAS_HEIGHT + 100) {
                     this.die();
                 }
 
-                // Frame de invencibilidade pós-dano
                 if (this.invincibilityFrames > 0) {
                     this.invincibilityFrames--;
                 }
             }
 
             draw() {
+                if (this.invincibilityFrames % 4 > 2) return;
+
                 ctx.save();
-                // Efeito visual de piscar se estiver invencível
-                if (this.invincibilityFrames % 4 > 2) {
-                    ctx.restore();
-                    return;
-                }
-
-                // Espelhar emoji caso esteja olhando para o lado oposto
                 ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
-                if (this.isFacingLeft) {
-                    ctx.scale(-1, 1);
-                }
+                if (this.isFacingLeft) ctx.scale(-1, 1);
 
-                ctx.font = "28px Arial";
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText("🧑‍🚀", 0, 0); // Bilo Ban - O Guardião Espacial
+                // DESENHO PROCEDURAL DE PIXEL ART - ASTRONAUTA BILO BAN
+                ctx.fillStyle = "#ffffff"; // Traje principal
+                // Corpo
+                ctx.fillRect(-12, -10, 24, 20);
+                // Cabeça (Capacete)
+                ctx.fillRect(-10, -20, 20, 11);
+                // Visor Brilhante do Capacete (Azul Celeste)
+                ctx.fillStyle = "#38bdf8";
+                ctx.fillRect(-6, -18, 14, 7);
+                ctx.fillStyle = "#e0f2fe"; // Brilho do visor
+                ctx.fillRect(4, -17, 3, 3);
+
+                // Mochila de Oxigênio (Cores de Deus AKA - Detalhes Amarelos/Vermelhos)
+                ctx.fillStyle = "#ef4444";
+                ctx.fillRect(-16, -8, 5, 14);
+
+                // Pernas / Animação de caminhada
+                ctx.fillStyle = "#ffffff";
+                let legOffset = Math.sin(this.walkCycle) * 4;
+                if (!this.grounded) legOffset = 4; // Pernas esticadas no ar
+                // Perna Esquerda
+                ctx.fillStyle = "#1e293b"; // Calça escura
+                ctx.fillRect(-8, 10, 6, 6);
+                ctx.fillStyle = "#f59e0b"; // Bota Amarela/Laranja
+                ctx.fillRect(-9, 13 + (movingRightOrLeft() ? legOffset : 0), 7, 4);
+                // Perna Direita
+                ctx.fillStyle = "#1e293b";
+                ctx.fillRect(2, 10, 6, 6);
+                ctx.fillStyle = "#f59e0b";
+                ctx.fillRect(1, 13 + (movingRightOrLeft() ? -legOffset : 0), 7, 4);
+
                 ctx.restore();
             }
 
@@ -758,11 +769,11 @@ Put your HTML text here<!DOCTYPE html>
                 this.grounded = false;
                 for (let block of blocks) {
                     if (this.checkCollision(this, block)) {
-                        if (this.vy > 0) { // Caindo
+                        if (this.vy > 0) {
                             this.y = block.y - this.height;
                             this.vy = 0;
                             this.grounded = true;
-                        } else if (this.vy < 0) { // Subindo
+                        } else if (this.vy < 0) {
                             this.y = block.y + block.height;
                             this.vy = 0;
                         }
@@ -773,10 +784,10 @@ Put your HTML text here<!DOCTYPE html>
             checkHorizontalCollisions() {
                 for (let block of blocks) {
                     if (this.checkCollision(this, block)) {
-                        if (this.vx > 0) { // Indo para Direita
+                        if (this.vx > 0) {
                             this.x = block.x - this.width;
                             this.vx = 0;
-                        } else if (this.vx < 0) { // Indo para Esquerda
+                        } else if (this.vx < 0) {
                             this.x = block.x + block.width;
                             this.vx = 0;
                         }
@@ -800,12 +811,11 @@ Put your HTML text here<!DOCTYPE html>
                 if (lives <= 0) {
                     gameOver();
                 } else {
-                    // Respawn no começo do nível
                     this.x = 80;
                     this.y = 100;
                     this.vx = 0;
                     this.vy = 0;
-                    this.invincibilityFrames = 60; // 1 segundo de imunidade
+                    this.invincibilityFrames = 60;
                 }
             }
 
@@ -816,97 +826,375 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // ELEMENTOS DOS BLOCOS / CHÃO
+        function movingRightOrLeft() {
+            return keys['ArrowLeft'] || keys['KeyA'] || touchKeys.left || gamepadKeys.left ||
+                   keys['ArrowRight'] || keys['KeyD'] || touchKeys.right || gamepadKeys.right;
+        }
+
+        // ELEMENTOS DOS BLOCOS / CHÃO - CARTOON PIXEL ART
         class Block {
-            constructor(x, y, type = "🧱") {
+            constructor(x, y, style = "grass") {
                 this.x = x;
                 this.y = y;
                 this.width = TILE_SIZE;
                 this.height = TILE_SIZE;
-                this.type = type;
+                this.style = style; // grass, desert, cave, sky, castle
             }
 
             draw() {
-                ctx.font = "34px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText(this.type, this.x, this.y);
+                ctx.save();
+                
+                // DESIGN DE TILES PROCEDURAIS (PIXEL ART CARTOON)
+                if (this.style === "grass") {
+                    // Base de terra marrom
+                    ctx.fillStyle = "#78350f";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                    // Ranhuras pixeladas na terra
+                    ctx.fillStyle = "#451a03";
+                    ctx.fillRect(this.x + 8, this.y + 12, 4, 4);
+                    ctx.fillRect(this.x + 24, this.y + 24, 4, 4);
+                    // Grama verde em pixel art por cima
+                    ctx.fillStyle = "#22c55e";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, 8);
+                    ctx.fillStyle = "#15803d"; // Sombra da grama
+                    ctx.fillRect(this.x, this.y + 8, TILE_SIZE, 4);
+                    // Picos de grama caindo
+                    ctx.fillRect(this.x + 4, this.y + 12, 4, 4);
+                    ctx.fillRect(this.x + 20, this.y + 12, 4, 4);
+                    ctx.fillRect(this.x + 32, this.y + 12, 4, 4);
+                } 
+                else if (this.style === "desert") {
+                    // Areia dourada
+                    ctx.fillStyle = "#eab308";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                    // Tijolos de arenito/rachaduras
+                    ctx.fillStyle = "#ca8a04";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, 3);
+                    ctx.fillRect(this.x, this.y + 3, 3, TILE_SIZE - 3);
+                    ctx.fillRect(this.x + TILE_SIZE - 3, this.y, 3, TILE_SIZE);
+                    ctx.fillRect(this.x, this.y + TILE_SIZE - 3, TILE_SIZE, 3);
+                    // Detalhe de pirâmide/tijolo no centro
+                    ctx.fillRect(this.x + 8, this.y + 16, 24, 4);
+                    ctx.fillRect(this.x + 16, this.y + 10, 8, 6);
+                } 
+                else if (this.style === "cave") {
+                    // Pedra roxa escura profunda
+                    ctx.fillStyle = "#4c1d95";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                    ctx.fillStyle = "#2e1065"; // Bordas pretas/sombreadas
+                    ctx.strokeRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
+                    // Detalhes brilhantes de minério cristalino
+                    ctx.fillStyle = "#a78bfa";
+                    ctx.fillRect(this.x + 12, this.y + 10, 6, 6);
+                    ctx.fillStyle = "#c084fc";
+                    ctx.fillRect(this.x + 24, this.y + 20, 6, 6);
+                    ctx.fillStyle = "#ffffff"; // Brilho do cristal
+                    ctx.fillRect(this.x + 14, this.y + 12, 2, 2);
+                } 
+                else if (this.style === "sky") {
+                    // Nuvens estilizadas como blocos fofos
+                    ctx.fillStyle = "#e0f2fe";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                    // Sombreado azulado
+                    ctx.fillStyle = "#bae6fd";
+                    ctx.fillRect(this.x, this.y + TILE_SIZE - 8, TILE_SIZE, 8);
+                    // Bordas arredondadas de nuvem em pixel art
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, 4);
+                    ctx.fillRect(this.x + 12, this.y + 8, 16, 16);
+                } 
+                else if (this.style === "castle") {
+                    // Pedra cinza de fortaleza antiga
+                    ctx.fillStyle = "#4b5563";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                    // Linhas de contorno do tijolo
+                    ctx.fillStyle = "#1f2937";
+                    ctx.fillRect(this.x, this.y, TILE_SIZE, 2);
+                    ctx.fillRect(this.x, this.y, 2, TILE_SIZE);
+                    ctx.fillRect(this.x, this.y + 20, TILE_SIZE, 2);
+                    ctx.fillRect(this.x + 20, this.y, 2, 20);
+                    ctx.fillRect(this.x + 10, this.y + 20, 2, 20);
+                    // Brilho na pedra
+                    ctx.fillStyle = "#9ca3af";
+                    ctx.fillRect(this.x + 2, this.y + 2, 6, 2);
+                    ctx.fillRect(this.x + 22, this.y + 2, 6, 2);
+                    ctx.fillRect(this.x + 2, this.y + 22, 4, 2);
+                }
+
+                ctx.restore();
             }
         }
 
-        // ESPINHOS E OBSTÁCULOS
+        // OBSTÁCULO: ESPINHOS PIXELADOS
         class Spike {
             constructor(x, y) {
-                this.x = x + 4;
+                this.x = x + 2;
                 this.y = y + 8;
-                this.width = TILE_SIZE - 8;
+                this.width = TILE_SIZE - 4;
                 this.height = TILE_SIZE - 8;
             }
 
             draw() {
-                ctx.font = "28px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText("🔺", this.x - 4, this.y - 8);
+                ctx.save();
+                // Espinhos metálicos afiados pixelados
+                ctx.fillStyle = "#9ca3af"; // Metal claro
+                for (let i = 0; i < 3; i++) {
+                    const sx = this.x + (i * 12);
+                    ctx.beginPath();
+                    ctx.moveTo(sx, this.y + this.height);
+                    ctx.lineTo(sx + 6, this.y);
+                    ctx.lineTo(sx + 12, this.y + this.height);
+                    ctx.closePath();
+                    ctx.fill();
+                    // Sombra metálica
+                    ctx.fillStyle = "#4b5563";
+                    ctx.beginPath();
+                    ctx.moveTo(sx + 6, this.y);
+                    ctx.lineTo(sx + 12, this.y + this.height);
+                    ctx.lineTo(sx + 6, this.y + this.height);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.fillStyle = "#9ca3af";
+                }
+                ctx.restore();
             }
         }
 
-        // MOEDAS / ESTRELAS
+        // OBSTÁCULO: RODA DE FOGO GIRATÓRIA (FIREBAR - ESTILO MARIO WORLD)
+        class Firebar {
+            constructor(x, y, length = 4, speed = 0.02) {
+                this.x = x;
+                this.y = y;
+                this.width = TILE_SIZE;
+                this.height = TILE_SIZE;
+                this.length = length;
+                this.angle = 0;
+                this.speed = speed;
+                this.ballRadius = 9;
+            }
+
+            update() {
+                this.angle += this.speed;
+            }
+
+            draw() {
+                const cx = this.x + TILE_SIZE / 2;
+                const cy = this.y + TILE_SIZE / 2;
+
+                // Desenhar o Bloco Central Metálico Estilizado (Seguro)
+                ctx.fillStyle = "#374151";
+                ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
+                ctx.fillStyle = "#9ca3af";
+                ctx.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
+                ctx.fillStyle = "#f59e0b";
+                ctx.fillRect(this.x + 16, this.y + 16, 8, 8);
+
+                // Desenhar a cadeia de bolas de fogo orbitando
+                for (let i = 1; i <= this.length; i++) {
+                    const dist = i * 22;
+                    const bx = cx + Math.cos(this.angle) * dist;
+                    const by = cy + Math.sin(this.angle) * dist;
+
+                    // Degradê de fogo pixelado
+                    ctx.fillStyle = "#ef4444"; // Vermelho exterior
+                    ctx.beginPath();
+                    ctx.arc(bx, by, this.ballRadius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#f97316"; // Laranja intermediário
+                    ctx.beginPath();
+                    ctx.arc(bx, by, this.ballRadius - 3, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#fef08a"; // Núcleo amarelo/branco brilhante
+                    ctx.beginPath();
+                    ctx.arc(bx, by, this.ballRadius - 6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            checkPlayerCollision(p) {
+                const cx = this.x + TILE_SIZE / 2;
+                const cy = this.y + TILE_SIZE / 2;
+                const px = p.x + p.width / 2;
+                const py = p.y + p.height / 2;
+
+                for (let i = 1; i <= this.length; i++) {
+                    const dist = i * 22;
+                    const bx = cx + Math.cos(this.angle) * dist;
+                    const by = cy + Math.sin(this.angle) * dist;
+
+                    const dx = bx - px;
+                    const dy = by - py;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    // Verifica se colidiu com o círculo de fogo
+                    if (distance < this.ballRadius + Math.max(p.width, p.height) / 2 - 4) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        // MOEDAS / ESTRELAS GIRATÓRIAS
         class Coin {
             constructor(x, y) {
                 this.x = x + 8;
                 this.y = y + 8;
                 this.width = 24;
                 this.height = 24;
-                this.bounceOffset = Math.random() * Math.PI; // Efeito flutuante assíncrono
+                this.bounceOffset = Math.random() * Math.PI;
+                this.spinFrame = Math.random() * 10;
             }
 
             draw() {
-                let wave = Math.sin(Date.now() / 200 + this.bounceOffset) * 4;
-                ctx.font = "24px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText("⭐", this.x - 4, this.y + wave - 4);
+                this.spinFrame += 0.15;
+                const wave = Math.sin(Date.now() / 200 + this.bounceOffset) * 4;
+                const widthScale = Math.abs(Math.sin(this.spinFrame));
+
+                ctx.save();
+                ctx.translate(this.x + 12, this.y + 12 + wave);
+                ctx.scale(widthScale, 1);
+
+                // Moeda dourada cartoon brilhante
+                ctx.fillStyle = "#d97706"; // Bordas
+                ctx.beginPath();
+                ctx.arc(0, 0, 11, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#f59e0b"; // Centro
+                ctx.beginPath();
+                ctx.arc(0, 0, 9, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#fef08a"; // Brilho interno
+                ctx.fillRect(-3, -3, 3, 3);
+
+                ctx.restore();
             }
         }
 
-        // INIMIGOS COMUNS (👾, 👻, 🕷️)
+        // INIMIGOS TEMÁTICOS PIXELADOS
         class Enemy {
             constructor(x, y, type, speed) {
                 this.x = x;
                 this.y = y;
                 this.width = 32;
                 this.height = 32;
-                this.type = type; // Emoji do inimigo
+                this.type = type; // alien, ghost, spider
                 this.vx = speed;
                 this.speed = speed;
-                this.patrolRange = 160; // Limite de movimento caso não bata em nada
+                this.patrolRange = 160;
                 this.startX = x;
+                this.animationFrame = 0;
             }
 
             update() {
                 this.x += this.vx;
+                this.animationFrame += 0.15;
 
-                // Patrulhamento simples baseado na distância inicial ou colisão horizontal simulada
                 if (Math.abs(this.x - this.startX) > this.patrolRange) {
                     this.vx = -this.vx;
                 }
 
-                // Inversão ao tocar em extremidades de tela ou de forma programática leve
                 if (this.x < 10 || this.x > levelWidth - 50) {
                     this.vx = -this.vx;
                 }
             }
 
             draw() {
-                ctx.font = "28px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText(this.type, this.x, this.y);
+                ctx.save();
+                ctx.translate(this.x + 16, this.y + 16);
+                if (this.vx > 0) ctx.scale(-1, 1); // Direção de movimento
+
+                const anim = Math.sin(this.animationFrame) * 3;
+
+                if (this.type === "alien") {
+                    // Alien verde waddler
+                    ctx.fillStyle = "#15803d"; // Antenas
+                    ctx.fillRect(-6, -14, 2, 4);
+                    ctx.fillRect(4, -14, 2, 4);
+                    // Cabeça/Corpo
+                    ctx.fillStyle = "#22c55e";
+                    ctx.fillRect(-12, -10 + anim, 24, 20 - anim);
+                    // Olhos grandes negros do espaço
+                    ctx.fillStyle = "#000000";
+                    ctx.fillRect(-7, -5, 4, 6);
+                    ctx.fillRect(3, -5, 4, 6);
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(-6, -5, 2, 2);
+                    ctx.fillRect(4, -5, 2, 2);
+                    // Boca brava
+                    ctx.fillStyle = "#15803d";
+                    ctx.fillRect(-4, 3, 8, 2);
+                } 
+                else if (this.type === "ghost") {
+                    // Fantasma flutuante translúcido
+                    ctx.fillStyle = "rgba(241, 245, 249, 0.9)";
+                    ctx.beginPath();
+                    ctx.arc(0, -2 + anim, 14, Math.PI, 0);
+                    ctx.fillRect(-14, -2 + anim, 28, 14);
+                    // Caudas pixeladas em baixo
+                    ctx.fillRect(-14, 12 + anim, 6, 4);
+                    ctx.fillRect(-2, 12 + anim, 6, 4);
+                    ctx.fillRect(8, 12 + anim, 6, 4);
+                    // Olhos vermelhos brilhantes
+                    ctx.fillStyle = "#ef4444";
+                    ctx.fillRect(-6, -2 + anim, 4, 4);
+                    ctx.fillRect(3, -2 + anim, 4, 4);
+                } 
+                else if (this.type === "spider") {
+                    // Aranha/Besouro alienígena
+                    ctx.fillStyle = "#312e81"; // Pernas robóticas escuras
+                    const legY = Math.sin(this.animationFrame * 2) * 4;
+                    ctx.fillRect(-16, legY, 32, 2);
+                    ctx.fillRect(-14, -legY, 28, 2);
+                    // Corpo principal redondo
+                    ctx.fillStyle = "#4338ca";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 11, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Listras
+                    ctx.fillStyle = "#a855f7";
+                    ctx.fillRect(-6, -6, 12, 3);
+                    // Olho único amarelo no centro
+                    ctx.fillStyle = "#eab308";
+                    ctx.fillRect(-3, -2, 6, 6);
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(-1, -2, 2, 2);
+                }
+
+                ctx.restore();
             }
         }
 
-        // PARTÍCULAS DE EXPLOSÕES E PONTOS
+        // ELEMENTO DE FUNDO: NUVENS CORES E DECORAÇÃO
+        class Cloud {
+            constructor(x, y, speed, size) {
+                this.x = x;
+                this.y = y;
+                this.speed = speed;
+                this.size = size;
+            }
+            update() {
+                this.x -= this.speed;
+                if (this.x < -150) {
+                    this.x = levelWidth + 50;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+                // Desenha nuvem pixelada agrupada
+                ctx.fillRect(this.x, this.y, this.size * 2, this.size);
+                ctx.fillRect(this.x + this.size * 0.4, this.y - this.size * 0.4, this.size * 1.2, this.size * 1.2);
+                ctx.fillRect(this.x - this.size * 0.2, this.y + this.size * 0.2, this.size * 0.8, this.size * 0.6);
+                ctx.restore();
+            }
+        }
+
+        // PARTÍCULAS
         class Particle {
             constructor(x, y, color) {
                 this.x = x;
@@ -917,26 +1205,22 @@ Put your HTML text here<!DOCTYPE html>
                 this.alpha = 1;
                 this.size = Math.random() * 4 + 2;
             }
-
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.vy += 0.2; // Suave gravidade nas partículas
-                this.alpha -= 0.02;
+                this.vy += 0.2;
+                this.alpha -= 0.025;
             }
-
             draw() {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillRect(this.x, this.y, this.size, this.size);
                 ctx.restore();
             }
         }
 
-        // CHEFE FINAL: ANTIAKA (Nível 50)
+        // CHEFE FINAL: ANTIAKA (MUNDO 5-5)
         class Boss {
             constructor(x, y) {
                 this.x = x;
@@ -950,14 +1234,13 @@ Put your HTML text here<!DOCTYPE html>
                 this.shootCooldown = 0;
                 this.hurtFrames = 0;
                 this.jumpTimer = 0;
-                this.phase = 1;
+                this.animFrame = 0;
             }
 
             update() {
-                // Comportamento do Chefe
                 this.x += this.vx;
+                this.animFrame += 0.1;
 
-                // Rebatida nas paredes da arena final
                 if (this.x < 50) {
                     this.x = 50;
                     this.vx = -this.vx;
@@ -967,28 +1250,23 @@ Put your HTML text here<!DOCTYPE html>
                     this.vx = -this.vx;
                 }
 
-                // Lógica de pulos aleatórios
                 this.jumpTimer++;
                 if (this.jumpTimer > 120) {
                     this.vy = -10 - Math.random() * 5;
                     this.jumpTimer = 0;
                 }
 
-                // Gravidade aplicada ao Chefe
                 this.vy += GRAVITY;
                 this.y += this.vy;
 
-                // Impedir que o Boss saia pelo fundo
                 if (this.y > CANVAS_HEIGHT - 110) {
                     this.y = CANVAS_HEIGHT - 110;
                     this.vy = 0;
                 }
 
-                // Disparo de Projéteis
                 this.shootCooldown--;
                 if (this.shootCooldown <= 0) {
                     this.shoot();
-                    // Frequência de disparos aumenta se o boss tiver pouca vida
                     this.shootCooldown = 120 - (3 - this.hp) * 35;
                 }
 
@@ -996,70 +1274,85 @@ Put your HTML text here<!DOCTYPE html>
             }
 
             shoot() {
-                // Atira na direção horizontal que está olhando ou diretamente na direção de Bilo Ban
                 let targetDirX = player.x < this.x ? -5 : 5;
                 bossProjectiles.push(new BossProjectile(this.x + this.width / 2, this.y + this.height / 2, targetDirX));
             }
 
             draw() {
+                if (this.hurtFrames % 6 > 3) return;
+
                 ctx.save();
-                if (this.hurtFrames % 6 > 3) {
-                    ctx.restore();
-                    return; // Efeito piscar de dano
-                }
+                const hover = Math.sin(this.animFrame) * 4;
 
-                // Desenha o temido ANTIAKA
-                ctx.font = "60px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText("👹", this.x, this.y);
+                // ANTIAKA PIXEL ART
+                ctx.translate(this.x + 35, this.y + 35 + hover);
 
-                // Desenhar barra de vida do Boss na tela
-                const barWidth = 200;
+                // Corpo/Manto Vermelho Sombrio
+                ctx.fillStyle = "#7f1d1d";
+                ctx.fillRect(-30, -10, 60, 45);
+                ctx.fillStyle = "#991b1b";
+                ctx.fillRect(-24, -22, 48, 22);
+
+                // Chifres do Demônio
+                ctx.fillStyle = "#111827";
+                ctx.fillRect(-22, -32, 8, 12);
+                ctx.fillRect(14, -32, 8, 12);
+
+                // Olhos brilhantes roxos/amarelos do mal de ANTIAKA
+                ctx.fillStyle = "#a855f7";
+                ctx.fillRect(-14, -14, 10, 6);
+                ctx.fillRect(4, -14, 10, 6);
+                ctx.fillStyle = "#ffffff";
+                ctx.fillRect(-10, -12, 3, 3);
+                ctx.fillRect(8, -12, 3, 3);
+
+                // Asas negras de morcego
+                ctx.fillStyle = "#111827";
+                const wingSwing = Math.sin(this.animFrame * 2) * 8;
+                // Asa Esquerda
+                ctx.fillRect(-50, -15 + wingSwing, 22, 26);
+                // Asa Direita
+                ctx.fillRect(28, -15 - wingSwing, 22, 26);
+
+                ctx.restore();
+
+                // Barra de vida do Boss
+                const barWidth = 240;
                 const barHeight = 15;
                 const barX = CANVAS_WIDTH / 2 - barWidth / 2;
                 const barY = 20;
 
-                // Borda
                 ctx.fillStyle = '#fff';
                 ctx.fillRect(barX - 2, barY - 2, barWidth + 4, barHeight + 4);
-                // Fundo preto
                 ctx.fillStyle = '#000';
                 ctx.fillRect(barX, barY, barWidth, barHeight);
-                // Vida vermelha proporcional
                 ctx.fillStyle = '#ef4444';
                 let hpRatio = this.hp / this.maxHp;
                 ctx.fillRect(barX, barY, barWidth * hpRatio, barHeight);
 
-                // Texto do Nome do Boss
                 ctx.font = "8px 'Press Start 2P'";
                 ctx.fillStyle = '#fff';
                 ctx.textAlign = 'center';
                 ctx.fillText("ANTIAKA", CANVAS_WIDTH / 2, barY + 11);
-
-                ctx.restore();
             }
 
             takeHit() {
                 if (this.hurtFrames > 0) return;
                 
                 this.hp--;
-                this.hurtFrames = 60; // 1 segundo invencível
+                this.hurtFrames = 60;
                 sfx.playBossHit();
                 
-                // Explode partículas ao tomar dano
                 createExplosionParticles(this.x + this.width/2, this.y + this.height/2, '#f59e0b', 30);
 
                 if (this.hp <= 0) {
                     winGame();
                 } else {
-                    // Fica furioso, aumenta a velocidade de movimentação
                     this.vx = (this.vx > 0 ? 1 : -1) * (5 + (3 - this.hp) * 2);
                 }
             }
         }
 
-        // PROJÉTIL DO CHEFE (👿 ou ☄️)
         class BossProjectile {
             constructor(x, y, vx) {
                 this.x = x;
@@ -1067,17 +1360,22 @@ Put your HTML text here<!DOCTYPE html>
                 this.width = 20;
                 this.height = 20;
                 this.vx = vx;
+                this.rot = 0;
             }
-
             update() {
                 this.x += this.vx;
+                this.rot += 0.1;
             }
-
             draw() {
-                ctx.font = "24px Arial";
-                ctx.textAlign = 'left';
-                ctx.textBaseline = 'top';
-                ctx.fillText("☄️", this.x, this.y);
+                ctx.save();
+                ctx.translate(this.x + 10, this.y + 10);
+                ctx.rotate(this.rot);
+                // Bola de plasma maligno pixelada
+                ctx.fillStyle = "#a855f7";
+                ctx.fillRect(-10, -10, 20, 20);
+                ctx.fillStyle = "#f472b6";
+                ctx.fillRect(-6, -6, 12, 12);
+                ctx.restore();
             }
         }
 
@@ -1088,118 +1386,126 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // INSTANCIAR / GERAR FASES (1 a 50)
+        // INSTANCIAR / GERAR FASES PROCEDURAIS DE 5 MUNDOS
         function generateLevel(levelNum) {
-            // Limpeza geral
             blocks = [];
             spikes = [];
             coins = [];
             enemies = [];
+            firebars = [];
             boss = null;
             bossProjectiles = [];
             particles = [];
+            gameClouds = [];
 
-            if (levelNum === 50) {
-                // FASE FINAL - ARENA DO BOSS
+            const wl = getWorldAndLevel(levelNum);
+
+            // Determinar estilo do bloco com base no mundo
+            let blockStyle = "grass";
+            if (wl.worldNum === 2) blockStyle = "desert";
+            if (wl.worldNum === 3) blockStyle = "cave";
+            if (wl.worldNum === 4) blockStyle = "sky";
+            if (wl.worldNum === 5) blockStyle = "castle";
+
+            // Nuvens decorativas de fundo para planície e céu
+            if (wl.worldNum === 1 || wl.worldNum === 4) {
+                for (let i = 0; i < 6; i++) {
+                    gameClouds.push(new Cloud(Math.random() * 1500, Math.random() * 200 + 40, Math.random() * 0.4 + 0.1, Math.random() * 40 + 30));
+                }
+            }
+
+            // FASE FINAL - CONFRONTO FINAL (Fase 25)
+            if (levelNum === MAX_LEVELS) {
                 levelWidth = CANVAS_WIDTH;
                 cameraX = 0;
 
-                // Chão inteiro blindado de blocos vermelhos simulando o ANTIAKA World
+                // Arena Castle
                 for (let col = 0; col < CANVAS_WIDTH / TILE_SIZE; col++) {
-                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, "🧱"));
-                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, "🧱"));
+                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, "castle"));
+                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, "castle"));
                 }
-
-                // Paredes para o jogador não fugir da arena
                 for (let row = 0; row < CANVAS_HEIGHT / TILE_SIZE; row++) {
-                    blocks.push(new Block(0, row * TILE_SIZE, "🧱"));
-                    blocks.push(new Block(CANVAS_WIDTH - TILE_SIZE, row * TILE_SIZE, "🧱"));
+                    blocks.push(new Block(0, row * TILE_SIZE, "castle"));
+                    blocks.push(new Block(CANVAS_WIDTH - TILE_SIZE, row * TILE_SIZE, "castle"));
                 }
 
-                // Pequenas plataformas de ajuda na batalha
-                blocks.push(new Block(160, 240, "🧱"));
-                blocks.push(new Block(200, 240, "🧱"));
-                blocks.push(new Block(CANVAS_WIDTH - 240, 240, "🧱"));
-                blocks.push(new Block(CANVAS_WIDTH - 200, 240, "🧱"));
+                // Firebars laterais para dificultar a luta do Boss
+                firebars.push(new Firebar(120, 200, 3, 0.015));
+                firebars.push(new Firebar(CANVAS_WIDTH - 160, 200, 3, -0.015));
 
-                // Instancia o Grande Vilão ANTIAKA
                 boss = new Boss(CANVAS_WIDTH / 2 - 35, 100);
-
-                // Posiciona Bilo Ban
                 player = new Player(80, CANVAS_HEIGHT - 130);
                 return;
             }
 
-            // GERAÇÃO PROCEDURAL INTELIGENTE (FASES 1 - 49)
-            // O mapa aumenta de tamanho gradativamente
-            levelWidth = 2000 + levelNum * 200;
+            // GERAÇÃO PROCEDURAL (Mundos 1 - 5)
+            levelWidth = 1800 + levelNum * 150;
             cameraX = 0;
 
             const totalTiles = Math.floor(levelWidth / TILE_SIZE);
             let index = 0;
 
-            // Determinar o tipo de inimigo com base no patamar da fase
-            let enemyType = "👾"; // Criatura inocente infectada
-            if (levelNum > 15) enemyType = "👻"; // Fantasma mais flutuante
-            if (levelNum > 35) enemyType = "🕷️"; // Aranha assassina do espaço
+            // Tipo de inimigo dependendo do mundo
+            let enemyType = "alien";
+            if (wl.worldNum === 3) enemyType = "ghost";
+            if (wl.worldNum === 4 || wl.worldNum === 5) enemyType = "spider";
 
-            // Velocidade dos inimigos cresce conforme a fase
-            const enemySpeed = 1.5 + (levelNum * 0.05);
+            const enemySpeed = 1.3 + (levelNum * 0.04);
 
             while (index < totalTiles) {
-                // Plataforma segura inicial (Primeiras 5 colunas)
+                // Entrada segura
                 if (index < 5) {
-                    blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE));
+                    blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
                     index++;
                     continue;
                 }
 
-                // Fim de fase seguro (Últimas 5 colunas)
+                // Saída segura
                 if (index > totalTiles - 5) {
-                    blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE));
-                    // Coloca o Portal Espacial ou Bandeira de Chegada no último bloco
+                    blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
                     if (index === totalTiles - 2) {
-                        // Portal de saída
-                        coins.push(new Coin(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2)); // Moeda indicadora
+                        coins.push(new Coin(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2));
                     }
                     index++;
                     continue;
                 }
 
-                // Criação inteligente de Buracos / Pits (Dificuldade Progressiva)
-                const pitChance = 0.08 + (levelNum * 0.004); // Chance aumenta com o nível
+                // Buracos (Sem buracos no Mundo 3 Cavernas para dar atmosfera claustrofóbica, mas muitos espinhos!)
+                const pitChance = wl.worldNum === 3 ? 0 : 0.08 + (levelNum * 0.005);
                 if (Math.random() < pitChance && index > 6) {
-                    const pitSize = Math.random() < 0.25 ? 2 : 1; // Pistas de 1 ou 2 blocos sem chão
-                    index += pitSize; // pula a criação de blocos
+                    index += Math.random() < 0.25 ? 2 : 1;
                     continue;
                 }
 
-                // Criar Bloco Normal de Chão
-                blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE));
+                blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
 
-                // Gerar obstáculos ou inimigos aleatórios sobre a superfície
                 const randomVal = Math.random();
 
-                // Spikes / Espinhos (🔺)
-                const spikeChance = 0.05 + (levelNum * 0.003);
+                // Espinhos
+                const spikeChance = wl.worldNum === 3 ? 0.12 : 0.05 + (levelNum * 0.003);
                 if (randomVal < spikeChance) {
                     spikes.push(new Spike(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2));
                 }
-                // Moedas / Estrelas (⭐)
-                else if (randomVal < 0.25) {
+                // Moedas
+                else if (randomVal < 0.22) {
                     coins.push(new Coin(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 3));
                 }
-                // Inimigos (👾/👻/🕷️)
-                else if (randomVal < 0.32) {
+                // Inimigos
+                else if (randomVal < 0.30) {
                     enemies.push(new Enemy(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, enemyType, enemySpeed));
                 }
 
-                // Plataformas Aéreas Aleatórias
+                // Spawn das Firebars (Introduzidas no Mundo 2 em diante)
+                if (wl.worldNum >= 2 && Math.random() < 0.04) {
+                    firebars.push(new Firebar(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 4, 3, 0.02 * (Math.random() < 0.5 ? 1 : -1)));
+                }
+
+                // Plataformas aéreas
                 if (Math.random() < 0.15) {
                     const platHeight = CANVAS_HEIGHT - TILE_SIZE * 4;
-                    const platLength = Math.floor(Math.random() * 3) + 2; // tamanho da plataforma de 2 a 4 blocos
+                    const platLength = Math.floor(Math.random() * 3) + 2;
                     for (let p = 0; p < platLength; p++) {
-                        blocks.push(new Block((index + p) * TILE_SIZE, platHeight));
+                        blocks.push(new Block((index + p) * TILE_SIZE, platHeight, blockStyle));
                         if (Math.random() < 0.4) {
                             coins.push(new Coin((index + p) * TILE_SIZE, platHeight - TILE_SIZE));
                         }
@@ -1209,39 +1515,33 @@ Put your HTML text here<!DOCTYPE html>
                 index++;
             }
 
-            // Instancia Bilo Ban no início
             player = new Player(80, CANVAS_HEIGHT - 120);
         }
 
         // SISTEMA DE HUD
         function updateHUD() {
-            hudLevel.innerText = `${currentLevel}/50`;
+            hudLevel.innerText = formatLevelString(currentLevel);
             hudScore.innerText = String(score).padStart(5, '0');
 
-            // Renderizar as vidas de forma visual com emojis
             let heartString = "";
             for (let i = 0; i < 3; i++) {
-                if (i < lives) {
-                    heartString += "❤️ ";
-                } else {
-                    heartString += "🖤 ";
-                }
+                heartString += (i < lives) ? "❤️ " : "🖤 ";
             }
             hudLives.innerText = heartString;
         }
 
         // TRANSIÇÃO DE NÍVEL
         function transitionToNextLevel() {
-            if (currentLevel < 50) {
+            if (currentLevel < MAX_LEVELS) {
                 currentLevel++;
                 sfx.playWin();
 
-                // Salva progresso automaticamente na nuvem ao passar de fase
                 saveProgressToCloud();
 
-                // Tela de transição
+                const wl = getWorldAndLevel(currentLevel);
                 screenNextLevel.style.display = 'flex';
-                nextLevelTitle.innerText = `FASE ${currentLevel}`;
+                nextLevelTitle.innerText = `MUNDO ${formatLevelString(currentLevel)}`;
+                nextLevelSubtitle.innerText = wl.name;
                 
                 setTimeout(() => {
                     screenNextLevel.style.display = 'none';
@@ -1254,7 +1554,7 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // ENTRADA NO MENU PRINCIPAL (Melhorado para verificar progresso em nuvem)
+        // ENTRADA NO MENU PRINCIPAL
         async function showMenu() {
             gameState = 'MENU';
             sfx.stopBGM();
@@ -1263,7 +1563,6 @@ Put your HTML text here<!DOCTYPE html>
             screenGameover.style.display = 'none';
             screenVictory.style.display = 'none';
 
-            // Garante que o botão de continuar sincronize ao retornar
             await loadProgressFromCloud();
             refreshFocusableButtons();
         }
@@ -1271,16 +1570,15 @@ Put your HTML text here<!DOCTYPE html>
         // INÍCIO DO JOGO (NOVA JORNADA)
         function startGame() {
             sfx.init();
-            sfx.startBGM(); // Inicia a trilha sonora 8-bit
+            sfx.startBGM();
             sfx.playJump();
             gameState = 'PLAYING';
             currentLevel = 1;
             lives = 3;
             score = 0;
 
-            // Reseta salvamento local e de nuvem ao começar nova jornada do zero
             savedProgress = { currentLevel: 1, score: 0, lives: 3 };
-            localStorage.removeItem('aka_world_bilo_ban_save');
+            localStorage.removeItem('aka_world_bilo_ban_save_25');
             saveProgressToCloud();
             btnContinue.classList.add('hidden');
 
@@ -1293,17 +1591,16 @@ Put your HTML text here<!DOCTYPE html>
             updateHUD();
         }
 
-        // CARREGAR E CONTINUAR DO MEIO DO JOGO
+        // CONTINUAR JORNADA
         function continueGame() {
             sfx.init();
             sfx.startBGM();
             sfx.playJump();
             gameState = 'PLAYING';
             
-            // Carrega estado recuperado
             currentLevel = savedProgress.currentLevel;
             score = savedProgress.score;
-            lives = 3; // Restaurar vidas completas para dar chance justa
+            lives = 3;
 
             screenMenu.style.display = 'none';
             screenGameover.style.display = 'none';
@@ -1317,14 +1614,13 @@ Put your HTML text here<!DOCTYPE html>
         // FIM DE JOGO
         function gameOver() {
             gameState = 'GAMEOVER';
-            sfx.stopBGM(); // Pausa música dramática no Game Over
+            sfx.stopBGM();
             screenGameover.style.display = 'flex';
 
-            // Atualiza o botão de continuar dentro da tela de Game Over
             if (savedProgress && savedProgress.currentLevel > 1) {
                 const gameoverLvlTxt = document.getElementById('gameover-continue-lvl');
                 if (gameoverLvlTxt) {
-                    gameoverLvlTxt.innerText = savedProgress.currentLevel;
+                    gameoverLvlTxt.innerText = formatLevelString(savedProgress.currentLevel);
                 }
                 if (btnRetrySave) {
                     btnRetrySave.classList.remove('hidden');
@@ -1341,7 +1637,7 @@ Put your HTML text here<!DOCTYPE html>
         // VITÓRIA TOTAL
         function winGame() {
             gameState = 'VICTORY';
-            sfx.stopBGM(); // Para trilha padrão
+            sfx.stopBGM();
             victoryFinalScore.innerText = `PONTOS FINAIS: ${String(score).padStart(5, '0')}`;
             screenVictory.style.display = 'flex';
             sfx.playWin();
@@ -1349,7 +1645,6 @@ Put your HTML text here<!DOCTYPE html>
             refreshFocusableButtons();
         }
 
-        // AÇÕES DOS BOTÕES DE UI
         btnStart.addEventListener('click', startGame);
         btnContinue.addEventListener('click', continueGame);
         btnRestart.addEventListener('click', startGame);
@@ -1357,17 +1652,14 @@ Put your HTML text here<!DOCTYPE html>
         btnMenuBack.addEventListener('click', showMenu);
         btnPlayAgain.addEventListener('click', startGame);
 
-        // LOOP PRINCIPAL DO JOGO (GAME LOOP)
         function gameLoop() {
-            pollGamepad(); // Lê o estado do controle físico conectado a cada ciclo
+            pollGamepad();
             update();
             render();
             requestAnimationFrame(gameLoop);
         }
 
-        // ATUALIZAÇÃO DA LÓGICA DO JOGO
         function update() {
-            // Se estiver em telas de menu, processa a navegação via gamepad de forma cadenciada
             if (gameState !== 'PLAYING') {
                 const now = Date.now();
                 if (now - lastGamepadInputTime > 220) {
@@ -1391,52 +1683,58 @@ Put your HTML text here<!DOCTYPE html>
                     if (gamepadKeys.action && focusableButtons[focusedIndex]) {
                         sfx.playCoin();
                         focusableButtons[focusedIndex].click();
-                        lastGamepadInputTime = now + 500; // Bloqueio temporário para evitar múltiplos cliques
+                        lastGamepadInputTime = now + 500;
                     }
                 }
                 return;
             }
 
-            // 1. Atualizar Jogador
+            // Atualizar Nuvens
+            for (let cloud of gameClouds) {
+                cloud.update();
+            }
+
+            // Atualizar Jogador
             if (player) {
                 player.update();
             }
 
-            // 2. Câmera acompanha o jogador mantendo-o próximo ao centro
-            if (player && currentLevel < 50) {
+            if (player && currentLevel < MAX_LEVELS) {
                 cameraX = player.x - CANVAS_WIDTH / 3;
-                // Impedir câmera de ultrapassar os limites do mapa
                 if (cameraX < 0) cameraX = 0;
                 if (cameraX > levelWidth - CANVAS_WIDTH) cameraX = levelWidth - CANVAS_WIDTH;
             } else {
-                // Arena do boss fixa
                 cameraX = 0;
             }
 
-            // 3. Atualizar Inimigos Comuns
+            // Atualizar Inimigos Comuns
             for (let i = enemies.length - 1; i >= 0; i--) {
                 let enemy = enemies[i];
                 enemy.update();
 
-                // Colisão entre Bilo e o inimigo
                 if (player && player.checkCollision(player, enemy)) {
-                    // Se estiver caindo rápido o suficiente (pular na cabeça)
                     if (player.vy > 0 && (player.y + player.height - player.vy) <= enemy.y + 12) {
                         enemies.splice(i, 1);
-                        player.vy = -8; // Impulso do salto
+                        player.vy = -8;
                         score += 150;
                         updateHUD();
                         sfx.playStomp();
-                        // Explosão de poeira azul na eliminação do inimigo
                         createExplosionParticles(enemy.x + 16, enemy.y + 16, '#60a5fa', 12);
                     } else {
-                        // Caso contrário, toma dano
                         player.takeDamage();
                     }
                 }
             }
 
-            // 4. Lógica das Moedas / Estrelas
+            // Atualizar Firebars
+            for (let fb of firebars) {
+                fb.update();
+                if (player && fb.checkPlayerCollision(player)) {
+                    player.takeDamage();
+                }
+            }
+
+            // Moedas / Estrelas
             for (let i = coins.length - 1; i >= 0; i--) {
                 let coin = coins[i];
                 if (player && player.checkCollision(player, coin)) {
@@ -1446,22 +1744,21 @@ Put your HTML text here<!DOCTYPE html>
                     sfx.playCoin();
                     createExplosionParticles(coin.x + 12, coin.y + 12, '#fbbf24', 8);
 
-                    // No final da fase normal, se o jogador coletar a última estrela do final da fase
-                    if (currentLevel < 50 && player.x > levelWidth - 150) {
+                    if (currentLevel < MAX_LEVELS && player.x > levelWidth - 150) {
                         transitionToNextLevel();
                         return;
                     }
                 }
             }
 
-            // 5. Lógica dos Espinhos (🔺)
+            // Espinhos
             for (let spike of spikes) {
                 if (player && player.checkCollision(player, spike)) {
                     player.takeDamage();
                 }
             }
 
-            // 6. Lógica das Partículas
+            // Partículas
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 if (particles[i].alpha <= 0) {
@@ -1469,34 +1766,29 @@ Put your HTML text here<!DOCTYPE html>
                 }
             }
 
-            // 7. Lógica das fases do CHEFE (Fase 50)
-            if (currentLevel === 50 && boss) {
+            // Lógica do CHEFE (Fase 25)
+            if (currentLevel === MAX_LEVELS && boss) {
                 boss.update();
 
-                // Colisão Bilo com o Chefe
                 if (player && player.checkCollision(player, boss)) {
-                    // Pulo na cabeça do Boss
                     if (player.vy > 0 && (player.y + player.height - player.vy) <= boss.y + 35) {
-                        player.vy = -11; // Super rebote
+                        player.vy = -11;
                         boss.takeHit();
                     } else {
                         player.takeDamage();
                     }
                 }
 
-                // Atualizar projéteis do Boss
                 for (let i = bossProjectiles.length - 1; i >= 0; i--) {
                     let proj = bossProjectiles[i];
                     proj.update();
 
-                    // Colisão com Bilo
                     if (player && player.checkCollision(player, proj)) {
                         bossProjectiles.splice(i, 1);
                         player.takeDamage();
                         continue;
                     }
 
-                    // Limpar projéteis fora da tela
                     if (proj.x < -50 || proj.x > CANVAS_WIDTH + 50) {
                         bossProjectiles.splice(i, 1);
                     }
@@ -1504,77 +1796,105 @@ Put your HTML text here<!DOCTYPE html>
             }
         }
 
-        // RENDERIZAÇÃO GRÁFICA
+        // RENDERIZAÇÃO
         function render() {
-            // Limpa o canvas
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-            ctx.save();
-            // Aplicar efeito de translação da câmera lateral
-            ctx.translate(-cameraX, 0);
+            const wl = getWorldAndLevel(currentLevel);
 
-            // Desenhar estrelas do fundo (Cosmo do AKA World)
-            ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-            for (let i = 0; i < 25; i++) {
-                let starX = (i * 123) % levelWidth;
-                let starY = (i * 87) % (CANVAS_HEIGHT - 100);
-                // Desenha pequenos pontos para o fundo
-                ctx.fillRect(starX, starY, 2, 2);
+            // DESENHAR DEGRADÊ DO CÉU DO MUNDO ATUAL
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+            skyGrad.addColorStop(0, wl.sky[0]);
+            skyGrad.addColorStop(1, wl.sky[1]);
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+            // Elementos de fundo específicos por Mundo
+            if (wl.worldNum === 2) {
+                // Desenhar o sol gigante do deserto
+                ctx.fillStyle = "rgba(253, 224, 71, 0.25)";
+                ctx.beginPath();
+                ctx.arc(CANVAS_WIDTH - 120, 100, 75, 0, Math.PI * 2);
+                ctx.fill();
             }
 
-            // Desenhar Espinhos (🔺)
+            ctx.save();
+            ctx.translate(-cameraX, 0);
+
+            // Nuvens decorativas
+            for (let cloud of gameClouds) {
+                cloud.draw();
+            }
+
+            // Espinhos
             for (let spike of spikes) {
                 spike.draw();
             }
 
-            // Desenhar Blocos de Plataformas (🧱)
+            // Firebars
+            for (let fb of firebars) {
+                fb.draw();
+            }
+
+            // Blocos de Plataformas
             for (let block of blocks) {
                 block.draw();
             }
 
-            // Desenhar Moedas (⭐)
+            // Moedas
             for (let coin of coins) {
                 coin.draw();
             }
 
-            // Desenhar Portal de Saída (🏁) no final da fase
-            if (currentLevel < 50) {
-                ctx.font = "40px Arial";
-                ctx.fillText("🏁", levelWidth - 100, CANVAS_HEIGHT - TILE_SIZE * 2.1);
+            // Desenhar Bandeira Final Pixelada no fim do nível
+            if (currentLevel < MAX_LEVELS) {
+                ctx.fillStyle = "#ef4444"; // Bandeira vermelha
+                ctx.fillRect(levelWidth - 100, CANVAS_HEIGHT - TILE_SIZE * 3.1, 28, 16);
+                ctx.fillStyle = "#ffffff"; // Haste branca
+                ctx.fillRect(levelWidth - 100, CANVAS_HEIGHT - TILE_SIZE * 3.1, 4, 44);
             }
 
-            // Desenhar Inimigos Comuns
+            // Inimigos
             for (let enemy of enemies) {
                 enemy.draw();
             }
 
-            // Desenhar Projéteis do Boss
+            // Projéteis do Boss
             for (let proj of bossProjectiles) {
                 proj.draw();
             }
 
-            // Desenhar Jogador (SÓ DESENHA SE ESTIVER INICIALIZADO)
+            // Jogador
             if (player) {
                 player.draw();
             }
 
-            // Desenhar Partículas FX
+            // Partículas FX
             for (let particle of particles) {
                 particle.draw();
             }
 
+            // Elemento de primeiro plano: Lava borbulhante do Castelo (Mundo 5)
+            if (wl.worldNum === 5) {
+                ctx.fillStyle = "rgba(239, 68, 68, 0.85)"; // Lava vermelha
+                const wave = Math.sin(Date.now() / 150) * 3;
+                ctx.fillRect(cameraX, CANVAS_HEIGHT - 20 + wave, CANVAS_WIDTH, 20);
+                // Detalhe de bolhas
+                ctx.fillStyle = "#f97316";
+                ctx.fillRect(cameraX + 240, CANVAS_HEIGHT - 16 + wave, 6, 6);
+                ctx.fillRect(cameraX + 540, CANVAS_HEIGHT - 12 + wave, 4, 4);
+            }
+
             ctx.restore();
 
-            // Renderizar Boss (Fora do scroll por ser tela fixa)
-            if (currentLevel === 50 && boss) {
+            // Renderizar Boss (Fora do scroll)
+            if (currentLevel === MAX_LEVELS && boss) {
                 boss.draw();
             }
         }
 
-        // INICIAR TUDO AUTOMATICAMENTE E LIGAR O CLOUD SAVE
         window.onload = function() {
-            // Carrega do LocalStorage imediatamente ao abrir o jogo para evitar delay
-            const localSave = localStorage.getItem('aka_world_bilo_ban_save');
+            const localSave = localStorage.getItem('aka_world_bilo_ban_save_25');
             if (localSave) {
                 try {
                     const data = JSON.parse(localSave);
@@ -1587,7 +1907,7 @@ Put your HTML text here<!DOCTYPE html>
                 }
             }
             initFirebase();
-            refreshFocusableButtons(); // Inicializa o mapeamento de botões navegáveis por controle
+            refreshFocusableButtons();
             gameLoop();
         };
 
