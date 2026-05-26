@@ -80,10 +80,10 @@
                     <!-- Box da História com Scroll -->
                     <div class="story-scroll bg-gray-950/80 border-2 border-yellow-600 rounded p-4 text-left text-[9px] md:text-xs leading-relaxed max-h-48 overflow-y-auto text-gray-300 mb-6">
                         <p class="text-yellow-400 text-center mb-3 font-bold">A SAGA DO AKA WORLD (25 NÍVEIS)</p>
-                        "Era uma vez, um deus supremo chamado <span class="text-white font-bold">Deus AKA</span>, que criou todo o universo AKA e, principalmente, o <span class="text-white font-bold">AKA World</span>. Para ajudá-lo, AKA criou dois guardiões universais: <span class="text-green-400 font-bold">AKINHA</span> e <span class="text-blue-400 font-bold">AKA MAN</span>.<br><br>
+                        "Era uma vez, um deus supremo chamado <span class="text-white font-bold">Deus AKA</span>, que criou todo o universe AKA e, principalmente, o <span class="text-white font-bold">AKA World</span>. Para ajudá-lo, AKA criou dois guardiões universais: <span class="text-green-400 font-bold">AKINHA</span> e <span class="text-blue-400 font-bold">AKA MAN</span>.<br><br>
                         Eles cresceram, mas <span class="text-blue-400 font-bold">AKA MAN</span> ficou orgulhoso e incentivou <span class="text-green-400">AKINHA</span> a ir para o lado do mal. Extremamente inocente, <span class="text-green-400">AKINHA</span> aceitou. Sabendo disso, Deus AKA os expulsou do Palácio da Criação.<br><br>
                         <span class="text-blue-400">AKA MAN</span>, por vingança, incentivou <span class="text-green-400">AKINHA</span> a criar o <span class="text-red-500 font-bold">ANTIAKA World</span>. <span class="text-green-400">AKINHA</span> aceitou com tristeza, transformou-se no vilão <span class="text-red-500 font-bold">ANTIAKA</span> e possuiu o AKA World, atormentando as pessoas.<br><br>
-                        Mas Deus AKA escolheu um humano comum chamado <span class="text-yellow-400 font-bold">Bilo Ban</span> para ser o novo Guardião Espacial! Explore os 5 mundos místico e limpe as 25 fases procedurais do planeta para expulsar ANTIAKA definitivamente!"
+                        But Deus AKA escolheu um humano comum chamado <span class="text-yellow-400 font-bold">Bilo Ban</span> para ser o novo Guardião Espacial! Explore os 5 mundos místico e limpe as 25 fases procedurais do planeta para expulsar ANTIAKA definitivamente!"
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@
                 </button>
             </div>
 
-            <!-- ANÚNCIO DE PRÓXIMA FASE (FADE OUT RÁPIDO) -->
+            <!-- ANÚNCIO DE PRÓXIMA FASE -->
             <div id="screen-nextlevel" class="absolute inset-0 bg-black/90 hidden flex-col items-center justify-center pointer-events-none z-20">
                 <h2 class="text-2xl md:text-4xl text-yellow-400 font-bold mb-2" id="next-level-title">MUNDO 1-2</h2>
                 <p class="text-xs text-gray-400" id="next-level-subtitle">Planície Cósmica</p>
@@ -137,7 +137,7 @@
 
         </div>
 
-        <!-- CONTROLES PARA DISPOSITIVOS MÓVEIS -->
+        <!-- CONTROLES MÓVEIS -->
         <div id="mobile-controls" class="grid grid-cols-2 bg-gray-950 p-4 border-t-4 border-yellow-500 gap-4 md:hidden">
             <div class="flex gap-4 justify-start">
                 <button id="btn-left" class="bg-gray-800 active:bg-yellow-600 border-2 border-gray-600 rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold select-none active:scale-95">◀</button>
@@ -159,15 +159,13 @@
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIGURAÇÕES GERAIS DE FÍSICA
         const GRAVITY = 0.5;
         const FRICTION = 0.85;
         const TILE_SIZE = 40;
         const CANVAS_WIDTH = 800;
         const CANVAS_HEIGHT = 440;
-        const MAX_LEVELS = 25; // Reduzido de 50 para 25 fases
+        const MAX_LEVELS = 25; 
 
-        // MUNDOS E ESTILOS
         const WORLDS = [
             { id: 1, name: "Planície Cósmica", sky: ["#60a5fa", "#93c5fd"], ground: "#4ade80" },
             { id: 2, name: "Deserto de Sírius", sky: ["#f59e0b", "#fde047"], ground: "#fbbf24" },
@@ -194,7 +192,6 @@
             return `${wl.worldNum}-${wl.subLevel}`;
         }
 
-        // SISTEMA DE ÁUDIO RETRÔ
         class SoundEffects {
             constructor() {
                 this.ctx = null;
@@ -216,8 +213,12 @@
                 ];
             }
             init() {
-                if (!this.ctx) {
-                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                try {
+                    if (!this.ctx) {
+                        this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                } catch (e) {
+                    console.warn("Web Audio API not supported or blocked", e);
                 }
             }
             getNoteFreq(note) {
@@ -230,52 +231,59 @@
                 return notes[note] || 0;
             }
             startBGM() {
-                this.init();
-                if (!this.ctx || this.isMusicPlaying) return;
-                this.isMusicPlaying = true;
-                this.currentBeat = 0;
+                try {
+                    this.init();
+                    if (!this.ctx || this.isMusicPlaying) return;
+                    this.isMusicPlaying = true;
+                    this.currentBeat = 0;
 
-                const stepDuration = 0.22;
-                const playStep = () => {
-                    if (!this.isMusicPlaying) return;
+                    const stepDuration = 0.22;
+                    const playStep = () => {
+                        if (!this.isMusicPlaying) return;
+                        try {
+                            const time = this.ctx.currentTime;
+                            const melNote = this.melody[this.currentBeat % this.melody.length];
+                            const bassNote = this.bass[this.currentBeat % this.bass.length];
 
-                    const time = this.ctx.currentTime;
-                    const melNote = this.melody[this.currentBeat % this.melody.length];
-                    const bassNote = this.bass[this.currentBeat % this.bass.length];
+                            const bassFreq = this.getNoteFreq(bassNote);
+                            if (bassFreq > 0) {
+                                let osc = this.ctx.createOscillator();
+                                let gain = this.ctx.createGain();
+                                osc.connect(gain);
+                                gain.connect(this.ctx.destination);
+                                osc.type = 'triangle';
+                                osc.frequency.setValueAtTime(bassFreq, time);
+                                gain.gain.setValueAtTime(0.06, time);
+                                gain.gain.linearRampToValueAtTime(0.01, time + stepDuration - 0.02);
+                                osc.start(time);
+                                osc.stop(time + stepDuration - 0.01);
+                            }
 
-                    const bassFreq = this.getNoteFreq(bassNote);
-                    if (bassFreq > 0) {
-                        let osc = this.ctx.createOscillator();
-                        let gain = this.ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.type = 'triangle';
-                        osc.frequency.setValueAtTime(bassFreq, time);
-                        gain.gain.setValueAtTime(0.06, time);
-                        gain.gain.exponentialRampToValueAtTime(0.01, time + stepDuration - 0.02);
-                        osc.start(time);
-                        osc.stop(time + stepDuration - 0.01);
-                    }
+                            const melFreq = this.getNoteFreq(melNote);
+                            if (melFreq > 0 && this.currentBeat % 2 === 0) {
+                                let osc = this.ctx.createOscillator();
+                                let gain = this.ctx.createGain();
+                                osc.connect(gain);
+                                gain.connect(this.ctx.destination);
+                                osc.type = 'square';
+                                osc.frequency.setValueAtTime(melFreq, time);
+                                gain.gain.setValueAtTime(0.012, time);
+                                gain.gain.linearRampToValueAtTime(0.002, time + stepDuration * 2 - 0.04);
+                                osc.start(time);
+                                osc.stop(time + stepDuration * 2 - 0.02);
+                            }
+                        } catch (err) {
+                            console.warn("Erro ao renderizar nota musical", err);
+                        }
 
-                    const melFreq = this.getNoteFreq(melNote);
-                    if (melFreq > 0 && this.currentBeat % 2 === 0) {
-                        let osc = this.ctx.createOscillator();
-                        let gain = this.ctx.createGain();
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
-                        osc.type = 'square';
-                        osc.frequency.setValueAtTime(melFreq, time);
-                        gain.gain.setValueAtTime(0.012, time);
-                        gain.gain.exponentialRampToValueAtTime(0.002, time + stepDuration * 2 - 0.04);
-                        osc.start(time);
-                        osc.stop(time + stepDuration * 2 - 0.02);
-                    }
+                        this.currentBeat++;
+                        this.bgmTimeout = setTimeout(playStep, stepDuration * 1000);
+                    };
 
-                    this.currentBeat++;
-                    this.bgmTimeout = setTimeout(playStep, stepDuration * 1000);
-                };
-
-                playStep();
+                    playStep();
+                } catch (e) {
+                    console.warn("Não foi possível iniciar a trilha sonora", e);
+                }
             }
             stopBGM() {
                 this.isMusicPlaying = false;
@@ -284,84 +292,109 @@
                 }
             }
             playJump() {
-                this.init(); if (!this.ctx) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(150, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(600, this.ctx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.15);
-            }
-            playCoin() {
-                this.init(); if (!this.ctx) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
-                osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08);
-                gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
-            }
-            playStomp() {
-                this.init(); if (!this.ctx) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(120, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.12);
-                gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.12);
-            }
-            playHurt() {
-                this.init(); if (!this.ctx) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(300, this.ctx.currentTime);
-                osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.3);
-            }
-            playBossHit() {
-                this.init(); if (!this.ctx) return;
-                let osc = this.ctx.createOscillator();
-                let gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(80, this.ctx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(240, this.ctx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
-                osc.start(); osc.stop(this.ctx.currentTime + 0.25);
-            }
-            playWin() {
-                this.init(); if (!this.ctx) return;
-                let now = this.ctx.currentTime;
-                let notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((freq, idx) => {
+                try {
+                    this.init(); if (!this.ctx) return;
                     let osc = this.ctx.createOscillator();
                     let gain = this.ctx.createGain();
                     osc.connect(gain); gain.connect(this.ctx.destination);
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-                    gain.gain.setValueAtTime(0.12, now + idx * 0.08);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
-                    osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
-                });
+                    osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(600, this.ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.15);
+                } catch (e) {
+                    console.warn("Falha segura ao emitir som de pulo", e);
+                }
+            }
+            playCoin() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    let osc = this.ctx.createOscillator();
+                    let gain = this.ctx.createGain();
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, this.ctx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, this.ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+                } catch (e) {
+                    console.warn("Erro ao emitir som da moeda", e);
+                }
+            }
+            playStomp() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    let osc = this.ctx.createOscillator();
+                    let gain = this.ctx.createGain();
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(120, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(40, this.ctx.currentTime + 0.12);
+                    gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.12);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.12);
+                } catch (e) {
+                    console.warn("Erro ao emitir som do pisão", e);
+                }
+            }
+            playHurt() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    let osc = this.ctx.createOscillator();
+                    let gain = this.ctx.createGain();
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(60, this.ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.3);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.3);
+                } catch (e) {
+                    console.warn("Erro ao emitir som de dano", e);
+                }
+            }
+            playBossHit() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    let osc = this.ctx.createOscillator();
+                    let gain = this.ctx.createGain();
+                    osc.connect(gain); gain.connect(this.ctx.destination);
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(80, this.ctx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(240, this.ctx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, this.ctx.currentTime + 0.25);
+                    osc.start(); osc.stop(this.ctx.currentTime + 0.25);
+                } catch (e) {
+                    console.warn("Erro ao emitir som de dano no Boss", e);
+                }
+            }
+            playWin() {
+                try {
+                    this.init(); if (!this.ctx) return;
+                    let now = this.ctx.currentTime;
+                    let notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, idx) => {
+                        try {
+                            let osc = this.ctx.createOscillator();
+                            let gain = this.ctx.createGain();
+                            osc.connect(gain); gain.connect(this.ctx.destination);
+                            osc.type = 'triangle';
+                            osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+                            gain.gain.setValueAtTime(0.12, now + idx * 0.08);
+                            gain.gain.linearRampToValueAtTime(0.01, now + idx * 0.08 + 0.2);
+                            osc.start(now + idx * 0.08); osc.stop(now + idx * 0.08 + 0.2);
+                        } catch (inner) {}
+                    });
+                } catch (e) {
+                    console.warn("Erro ao emitir fanfarra de vitória", e);
+                }
             }
         }
         const sfx = new SoundEffects();
 
-        // PERSISTÊNCIA NA NUVEM DEUS AKA
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         let db = null;
         let auth = null;
@@ -443,7 +476,7 @@
                         savedProgress = {
                             currentLevel: data.currentLevel,
                             score: data.score || 0,
-                            lives: data.lives || 3
+                            lives: data.lives || 10
                         };
                         showContinueButton(savedProgress.currentLevel);
                         localStorage.setItem('aka_world_bilo_ban_save_25', JSON.stringify(savedProgress));
@@ -476,7 +509,6 @@
             }
         }
 
-        // SISTEMA DE NAVEGAÇÃO POR BOTOES (ANDROID TV / REMOTE / KEYBOARD)
         let focusableButtons = [];
         let focusedIndex = 0;
         let lastGamepadInputTime = 0;
@@ -555,7 +587,6 @@
             }
         }
 
-        // ELEMENTOS DO DOM
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const hud = document.getElementById('hud');
@@ -585,7 +616,7 @@
         // ESTADO GLOBAL DO JOGO
         let gameState = 'MENU';
         let currentLevel = 1;
-        let lives = 3;
+        let lives = 10;
         let score = 0;
         let keys = {};
         let touchKeys = { left: false, right: false, jump: false };
@@ -598,13 +629,12 @@
         let spikes = [];
         let coins = [];
         let enemies = [];
-        let firebars = []; // Novo obstáculo giratório de fogo
+        let firebars = [];
         let boss = null;
         let bossProjectiles = [];
         let particles = [];
-        let gameClouds = []; // Nuvens decorativas de fundo
+        let gameClouds = [];
 
-        // CONTROLES DE ENTRADA (TECLADO / TV REMOTE KEYS)
         window.addEventListener('keydown', (e) => {
             keys[e.code] = true;
             if (gameState === 'PLAYING') {
@@ -637,7 +667,6 @@
             keys[e.code] = false;
         });
 
-        // TOQUE NO CELULAR
         const setupMobileButton = (btn, action) => {
             btn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -653,7 +682,6 @@
         setupMobileButton(btnRight, 'right');
         setupMobileButton(btnJump, 'jump');
 
-        // CLASSE DO JOGADOR - CARTOON PIXEL ART
         class Player {
             constructor(x, y) {
                 this.x = x;
@@ -663,7 +691,7 @@
                 this.vx = 0;
                 this.vy = 0;
                 this.speed = 5.5;
-                this.jumpStrength = 12.5;
+                this.jumpStrength = 12.3; // Incremento de 5% de dificuldade geral (antes: 12.5)
                 this.grounded = false;
                 this.invincibilityFrames = 0;
                 this.isFacingLeft = false;
@@ -731,32 +759,31 @@
                 ctx.translate(this.x + this.width / 2, this.y + this.height / 2);
                 if (this.isFacingLeft) ctx.scale(-1, 1);
 
-                // DESENHO PROCEDURAL DE PIXEL ART - ASTRONAUTA BILO BAN
-                ctx.fillStyle = "#ffffff"; // Traje principal
-                // Corpo
+                // Desenho procedimental do astronauta Bilo Ban
+                ctx.fillStyle = "#ffffff";
                 ctx.fillRect(-12, -10, 24, 20);
-                // Cabeça (Capacete)
                 ctx.fillRect(-10, -20, 20, 11);
-                // Visor Brilhante do Capacete (Azul Celeste)
+                
+                // Visor
                 ctx.fillStyle = "#38bdf8";
                 ctx.fillRect(-6, -18, 14, 7);
-                ctx.fillStyle = "#e0f2fe"; // Brilho do visor
+                ctx.fillStyle = "#e0f2fe";
                 ctx.fillRect(4, -17, 3, 3);
 
-                // Mochila de Oxigênio (Cores de Deus AKA - Detalhes Amarelos/Vermelhos)
+                // Mochila
                 ctx.fillStyle = "#ef4444";
                 ctx.fillRect(-16, -8, 5, 14);
 
-                // Pernas / Animação de caminhada
+                // Pernas / Caminhada
                 ctx.fillStyle = "#ffffff";
                 let legOffset = Math.sin(this.walkCycle) * 4;
-                if (!this.grounded) legOffset = 4; // Pernas esticadas no ar
-                // Perna Esquerda
-                ctx.fillStyle = "#1e293b"; // Calça escura
+                if (!this.grounded) legOffset = 4;
+                
+                ctx.fillStyle = "#1e293b";
                 ctx.fillRect(-8, 10, 6, 6);
-                ctx.fillStyle = "#f59e0b"; // Bota Amarela/Laranja
+                ctx.fillStyle = "#f59e0b";
                 ctx.fillRect(-9, 13 + (movingRightOrLeft() ? legOffset : 0), 7, 4);
-                // Perna Direita
+                
                 ctx.fillStyle = "#1e293b";
                 ctx.fillRect(2, 10, 6, 6);
                 ctx.fillStyle = "#f59e0b";
@@ -815,7 +842,7 @@
                     this.y = 100;
                     this.vx = 0;
                     this.vy = 0;
-                    this.invincibilityFrames = 120;
+                    this.invincibilityFrames = 120; // 2 segundos de imunidade
                 }
             }
 
@@ -831,101 +858,65 @@
                    keys['ArrowRight'] || keys['KeyD'] || touchKeys.right || gamepadKeys.right;
         }
 
-        // ELEMENTOS DOS BLOCOS / CHÃO - CARTOON PIXEL ART
         class Block {
             constructor(x, y, style = "grass") {
                 this.x = x;
                 this.y = y;
                 this.width = TILE_SIZE;
                 this.height = TILE_SIZE;
-                this.style = style; // grass, desert, cave, sky, castle
+                this.style = style;
             }
 
             draw() {
                 ctx.save();
-                
-                // DESIGN DE TILES PROCEDURAIS (PIXEL ART CARTOON)
                 if (this.style === "grass") {
-                    // Base de terra marrom
                     ctx.fillStyle = "#78350f";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                    // Ranhuras pixeladas na terra
                     ctx.fillStyle = "#451a03";
                     ctx.fillRect(this.x + 8, this.y + 12, 4, 4);
                     ctx.fillRect(this.x + 24, this.y + 24, 4, 4);
-                    // Grama verde em pixel art por cima
                     ctx.fillStyle = "#22c55e";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, 8);
-                    ctx.fillStyle = "#15803d"; // Sombra da grama
+                    ctx.fillStyle = "#15803d";
                     ctx.fillRect(this.x, this.y + 8, TILE_SIZE, 4);
-                    // Picos de grama caindo
                     ctx.fillRect(this.x + 4, this.y + 12, 4, 4);
                     ctx.fillRect(this.x + 20, this.y + 12, 4, 4);
-                    ctx.fillRect(this.x + 32, this.y + 12, 4, 4);
                 } 
                 else if (this.style === "desert") {
-                    // Areia dourada
                     ctx.fillStyle = "#eab308";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                    // Tijolos de arenito/rachaduras
                     ctx.fillStyle = "#ca8a04";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, 3);
-                    ctx.fillRect(this.x, this.y + 3, 3, TILE_SIZE - 3);
                     ctx.fillRect(this.x + TILE_SIZE - 3, this.y, 3, TILE_SIZE);
-                    ctx.fillRect(this.x, this.y + TILE_SIZE - 3, TILE_SIZE, 3);
-                    // Detalhe de pirâmide/tijolo no centro
                     ctx.fillRect(this.x + 8, this.y + 16, 24, 4);
-                    ctx.fillRect(this.x + 16, this.y + 10, 8, 6);
                 } 
                 else if (this.style === "cave") {
-                    // Pedra roxa escura profunda
                     ctx.fillStyle = "#4c1d95";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                    ctx.fillStyle = "#2e1065"; // Bordas pretas/sombreadas
+                    ctx.fillStyle = "#2e1065";
                     ctx.strokeRect(this.x + 1, this.y + 1, TILE_SIZE - 2, TILE_SIZE - 2);
-                    // Detalhes brilhantes de minério cristalino
                     ctx.fillStyle = "#a78bfa";
                     ctx.fillRect(this.x + 12, this.y + 10, 6, 6);
-                    ctx.fillStyle = "#c084fc";
-                    ctx.fillRect(this.x + 24, this.y + 20, 6, 6);
-                    ctx.fillStyle = "#ffffff"; // Brilho do cristal
-                    ctx.fillRect(this.x + 14, this.y + 12, 2, 2);
                 } 
                 else if (this.style === "sky") {
-                    // Nuvens estilizadas como blocos fofos
                     ctx.fillStyle = "#e0f2fe";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                    // Sombreado azulado
                     ctx.fillStyle = "#bae6fd";
                     ctx.fillRect(this.x, this.y + TILE_SIZE - 8, TILE_SIZE, 8);
-                    // Bordas arredondadas de nuvem em pixel art
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, 4);
-                    ctx.fillRect(this.x + 12, this.y + 8, 16, 16);
                 } 
                 else if (this.style === "castle") {
-                    // Pedra cinza de fortaleza antiga
                     ctx.fillStyle = "#4b5563";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                    // Linhas de contorno do tijolo
                     ctx.fillStyle = "#1f2937";
                     ctx.fillRect(this.x, this.y, TILE_SIZE, 2);
-                    ctx.fillRect(this.x, this.y, 2, TILE_SIZE);
                     ctx.fillRect(this.x, this.y + 20, TILE_SIZE, 2);
-                    ctx.fillRect(this.x + 20, this.y, 2, 20);
-                    ctx.fillRect(this.x + 10, this.y + 20, 2, 20);
-                    // Brilho na pedra
                     ctx.fillStyle = "#9ca3af";
                     ctx.fillRect(this.x + 2, this.y + 2, 6, 2);
-                    ctx.fillRect(this.x + 22, this.y + 2, 6, 2);
-                    ctx.fillRect(this.x + 2, this.y + 22, 4, 2);
                 }
-
                 ctx.restore();
             }
         }
 
-        // OBSTÁCULO: ESPINHOS PIXELADOS
         class Spike {
             constructor(x, y) {
                 this.x = x + 2;
@@ -936,8 +927,7 @@
 
             draw() {
                 ctx.save();
-                // Espinhos metálicos afiados pixelados
-                ctx.fillStyle = "#9ca3af"; // Metal claro
+                ctx.fillStyle = "#9ca3af";
                 for (let i = 0; i < 3; i++) {
                     const sx = this.x + (i * 12);
                     ctx.beginPath();
@@ -946,23 +936,13 @@
                     ctx.lineTo(sx + 12, this.y + this.height);
                     ctx.closePath();
                     ctx.fill();
-                    // Sombra metálica
-                    ctx.fillStyle = "#4b5563";
-                    ctx.beginPath();
-                    ctx.moveTo(sx + 6, this.y);
-                    ctx.lineTo(sx + 12, this.y + this.height);
-                    ctx.lineTo(sx + 6, this.y + this.height);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.fillStyle = "#9ca3af";
                 }
                 ctx.restore();
             }
         }
 
-        // OBSTÁCULO: RODA DE FOGO GIRATÓRIA (FIREBAR - ESTILO MARIO WORLD)
         class Firebar {
-            constructor(x, y, length = 2, speed = 0.012) {
+            constructor(x, y, length = 2, speed = 0.02) {
                 this.x = x;
                 this.y = y;
                 this.width = TILE_SIZE;
@@ -981,34 +961,22 @@
                 const cx = this.x + TILE_SIZE / 2;
                 const cy = this.y + TILE_SIZE / 2;
 
-                // Desenhar o Bloco Central Metálico Estilizado (Seguro)
                 ctx.fillStyle = "#374151";
                 ctx.fillRect(this.x, this.y, TILE_SIZE, TILE_SIZE);
-                ctx.fillStyle = "#9ca3af";
-                ctx.fillRect(this.x + 4, this.y + 4, TILE_SIZE - 8, TILE_SIZE - 8);
-                ctx.fillStyle = "#f59e0b";
-                ctx.fillRect(this.x + 16, this.y + 16, 8, 8);
 
-                // Desenhar a cadeia de bolas de fogo orbitando
                 for (let i = 1; i <= this.length; i++) {
                     const dist = i * 22;
                     const bx = cx + Math.cos(this.angle) * dist;
                     const by = cy + Math.sin(this.angle) * dist;
 
-                    // Degradê de fogo pixelado
-                    ctx.fillStyle = "#ef4444"; // Vermelho exterior
+                    ctx.fillStyle = "#ef4444";
                     ctx.beginPath();
                     ctx.arc(bx, by, this.ballRadius, 0, Math.PI * 2);
                     ctx.fill();
 
-                    ctx.fillStyle = "#f97316"; // Laranja intermediário
+                    ctx.fillStyle = "#f97316";
                     ctx.beginPath();
                     ctx.arc(bx, by, this.ballRadius - 3, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    ctx.fillStyle = "#fef08a"; // Núcleo amarelo/branco brilhante
-                    ctx.beginPath();
-                    ctx.arc(bx, by, this.ballRadius - 6, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
@@ -1028,7 +996,6 @@
                     const dy = by - py;
                     const distance = Math.sqrt(dx * dx + dy * dy);
 
-                    // Verifica se colidiu com o círculo de fogo
                     if (distance < this.ballRadius + Math.max(p.width, p.height) / 2 - 4) {
                         return true;
                     }
@@ -1037,7 +1004,6 @@
             }
         }
 
-        // MOEDAS / ESTRELAS GIRATÓRIAS
         class Coin {
             constructor(x, y) {
                 this.x = x + 8;
@@ -1057,32 +1023,27 @@
                 ctx.translate(this.x + 12, this.y + 12 + wave);
                 ctx.scale(widthScale, 1);
 
-                // Moeda dourada cartoon brilhante
-                ctx.fillStyle = "#d97706"; // Bordas
+                ctx.fillStyle = "#d97706";
                 ctx.beginPath();
                 ctx.arc(0, 0, 11, 0, Math.PI * 2);
                 ctx.fill();
 
-                ctx.fillStyle = "#f59e0b"; // Centro
+                ctx.fillStyle = "#f59e0b";
                 ctx.beginPath();
                 ctx.arc(0, 0, 9, 0, Math.PI * 2);
                 ctx.fill();
-
-                ctx.fillStyle = "#fef08a"; // Brilho interno
-                ctx.fillRect(-3, -3, 3, 3);
 
                 ctx.restore();
             }
         }
 
-        // INIMIGOS TEMÁTICOS PIXELADOS
         class Enemy {
             constructor(x, y, type, speed) {
                 this.x = x;
                 this.y = y;
                 this.width = 32;
                 this.height = 32;
-                this.type = type; // alien, ghost, spider
+                this.type = type;
                 this.vx = speed;
                 this.speed = speed;
                 this.patrolRange = 160;
@@ -1106,70 +1067,42 @@
             draw() {
                 ctx.save();
                 ctx.translate(this.x + 16, this.y + 16);
-                if (this.vx > 0) ctx.scale(-1, 1); // Direção de movimento
+                if (this.vx > 0) ctx.scale(-1, 1);
 
                 const anim = Math.sin(this.animationFrame) * 3;
 
                 if (this.type === "alien") {
-                    // Alien verde waddler
-                    ctx.fillStyle = "#15803d"; // Antenas
+                    ctx.fillStyle = "#15803d";
                     ctx.fillRect(-6, -14, 2, 4);
                     ctx.fillRect(4, -14, 2, 4);
-                    // Cabeça/Corpo
                     ctx.fillStyle = "#22c55e";
                     ctx.fillRect(-12, -10 + anim, 24, 20 - anim);
-                    // Olhos grandes negros do espaço
                     ctx.fillStyle = "#000000";
                     ctx.fillRect(-7, -5, 4, 6);
                     ctx.fillRect(3, -5, 4, 6);
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(-6, -5, 2, 2);
-                    ctx.fillRect(4, -5, 2, 2);
-                    // Boca brava
-                    ctx.fillStyle = "#15803d";
-                    ctx.fillRect(-4, 3, 8, 2);
                 } 
                 else if (this.type === "ghost") {
-                    // Fantasma flutuante translúcido
                     ctx.fillStyle = "rgba(241, 245, 249, 0.9)";
                     ctx.beginPath();
                     ctx.arc(0, -2 + anim, 14, Math.PI, 0);
                     ctx.fillRect(-14, -2 + anim, 28, 14);
-                    // Caudas pixeladas em baixo
-                    ctx.fillRect(-14, 12 + anim, 6, 4);
-                    ctx.fillRect(-2, 12 + anim, 6, 4);
-                    ctx.fillRect(8, 12 + anim, 6, 4);
-                    // Olhos vermelhos brilhantes
                     ctx.fillStyle = "#ef4444";
                     ctx.fillRect(-6, -2 + anim, 4, 4);
                     ctx.fillRect(3, -2 + anim, 4, 4);
                 } 
                 else if (this.type === "spider") {
-                    // Aranha/Besouro alienígena
-                    ctx.fillStyle = "#312e81"; // Pernas robóticas escuras
+                    ctx.fillStyle = "#312e81";
                     const legY = Math.sin(this.animationFrame * 2) * 4;
                     ctx.fillRect(-16, legY, 32, 2);
-                    ctx.fillRect(-14, -legY, 28, 2);
-                    // Corpo principal redondo
                     ctx.fillStyle = "#4338ca";
                     ctx.beginPath();
                     ctx.arc(0, 0, 11, 0, Math.PI * 2);
                     ctx.fill();
-                    // Listras
-                    ctx.fillStyle = "#a855f7";
-                    ctx.fillRect(-6, -6, 12, 3);
-                    // Olho único amarelo no centro
-                    ctx.fillStyle = "#eab308";
-                    ctx.fillRect(-3, -2, 6, 6);
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(-1, -2, 2, 2);
                 }
-
                 ctx.restore();
             }
         }
 
-        // ELEMENTO DE FUNDO: NUVENS CORES E DECORAÇÃO
         class Cloud {
             constructor(x, y, speed, size) {
                 this.x = x;
@@ -1186,15 +1119,11 @@
             draw() {
                 ctx.save();
                 ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-                // Desenha nuvem pixelada agrupada
                 ctx.fillRect(this.x, this.y, this.size * 2, this.size);
-                ctx.fillRect(this.x + this.size * 0.4, this.y - this.size * 0.4, this.size * 1.2, this.size * 1.2);
-                ctx.fillRect(this.x - this.size * 0.2, this.y + this.size * 0.2, this.size * 0.8, this.size * 0.6);
                 ctx.restore();
             }
         }
 
-        // PARTÍCULAS
         class Particle {
             constructor(x, y, color) {
                 this.x = x;
@@ -1220,16 +1149,24 @@
             }
         }
 
-        // CHEFE FINAL: ANTIAKA (MUNDO 5-5)
         class Boss {
-            constructor(x, y) {
+            constructor(x, y, worldNum) {
                 this.x = x;
                 this.y = y;
                 this.width = 70;
                 this.height = 70;
-                this.maxHp = 3;
-                this.hp = 3;
-                this.vx = 2;
+                this.worldNum = worldNum; 
+                
+                if (this.worldNum === 5) {
+                    this.maxHp = 4; // ANTIAKA (+8% dificuldade)
+                    this.hp = 4;
+                    this.vx = 4.32; 
+                } else {
+                    this.maxHp = 3;
+                    this.hp = 3;
+                    this.vx = 2 + (worldNum * 0.5); 
+                }
+                
                 this.vy = 0;
                 this.shootCooldown = 0;
                 this.hurtFrames = 0;
@@ -1252,7 +1189,7 @@
 
                 this.jumpTimer++;
                 if (this.jumpTimer > 120) {
-                    this.vy = -10 - Math.random() * 5;
+                    this.vy = -9 - Math.random() * 4;
                     this.jumpTimer = 0;
                 }
 
@@ -1267,15 +1204,24 @@
                 this.shootCooldown--;
                 if (this.shootCooldown <= 0) {
                     this.shoot();
-                    this.shootCooldown = 240 - (3 - this.hp) * 50;
+                    
+                    let baseCooldown = 130 - (this.worldNum * 12);
+                    if (this.worldNum === 5) {
+                        this.shootCooldown = Math.floor((baseCooldown - (4 - this.hp) * 30) * 0.92);
+                    } else {
+                        this.shootCooldown = baseCooldown - (3 - this.hp) * 20;
+                    }
                 }
 
                 if (this.hurtFrames > 0) this.hurtFrames--;
             }
 
             shoot() {
-                let targetDirX = player.x < this.x ? -5 : 5;
-                bossProjectiles.push(new BossProjectile(this.x + this.width / 2, this.y + this.height / 2, targetDirX));
+                let speedFactor = 4.5 + (this.worldNum * 0.5); 
+                if (this.worldNum === 5) speedFactor = 5.4; 
+                
+                let targetDirX = player.x < this.x ? -speedFactor : speedFactor;
+                bossProjectiles.push(new BossProjectile(this.x + this.width / 2, this.y + this.height / 2, targetDirX, this.worldNum));
             }
 
             draw() {
@@ -1283,40 +1229,79 @@
 
                 ctx.save();
                 const hover = Math.sin(this.animFrame) * 4;
-
-                // ANTIAKA PIXEL ART
                 ctx.translate(this.x + 35, this.y + 35 + hover);
 
-                // Corpo/Manto Vermelho Sombrio
-                ctx.fillStyle = "#7f1d1d";
-                ctx.fillRect(-30, -10, 60, 45);
-                ctx.fillStyle = "#991b1b";
-                ctx.fillRect(-24, -22, 48, 22);
-
-                // Chifres do Demônio
-                ctx.fillStyle = "#111827";
-                ctx.fillRect(-22, -32, 8, 12);
-                ctx.fillRect(14, -32, 8, 12);
-
-                // Olhos brilhantes roxos/amarelos do mal de ANTIAKA
-                ctx.fillStyle = "#a855f7";
-                ctx.fillRect(-14, -14, 10, 6);
-                ctx.fillRect(4, -14, 10, 6);
-                ctx.fillStyle = "#ffffff";
-                ctx.fillRect(-10, -12, 3, 3);
-                ctx.fillRect(8, -12, 3, 3);
-
-                // Asas negras de morcego
-                ctx.fillStyle = "#111827";
-                const wingSwing = Math.sin(this.animFrame * 2) * 8;
-                // Asa Esquerda
-                ctx.fillRect(-50, -15 + wingSwing, 22, 26);
-                // Asa Direita
-                ctx.fillRect(28, -15 - wingSwing, 22, 26);
+                if (this.worldNum === 1) {
+                    ctx.fillStyle = "#22c55e";
+                    ctx.fillRect(-24, -16, 48, 36);
+                    ctx.fillStyle = "#15803d";
+                    ctx.fillRect(-18, -26, 36, 10);
+                    ctx.fillStyle = "#facc15";
+                    ctx.fillRect(-15, -34, 30, 4);
+                    ctx.fillStyle = "#ef4444";
+                    ctx.fillRect(-10, -12, 6, 6);
+                    ctx.fillRect(4, -12, 6, 6);
+                    ctx.fillStyle = "#f1f5f9";
+                    ctx.fillRect(-38, -10, 14, 16);
+                    ctx.fillRect(24, -10, 14, 16);
+                } 
+                else if (this.worldNum === 2) {
+                    ctx.fillStyle = "#ca8a04";
+                    ctx.fillRect(-32, -22, 64, 46);
+                    ctx.fillStyle = "#78350f";
+                    ctx.fillRect(-16, -10, 32, 20);
+                    ctx.fillStyle = "#facc15";
+                    ctx.fillRect(-6, -4, 12, 12);
+                    ctx.fillStyle = "#fef08a";
+                    ctx.fillRect(-14, -16, 6, 4);
+                    ctx.fillRect(8, -16, 6, 4);
+                } 
+                else if (this.worldNum === 3) {
+                    ctx.fillStyle = "#6d28d9";
+                    ctx.fillRect(-26, -24, 52, 44);
+                    ctx.fillStyle = "#4c1d95";
+                    ctx.fillRect(-26, 20, 10, 14);
+                    ctx.fillRect(-6, 20, 12, 18);
+                    ctx.fillRect(16, 20, 10, 14);
+                    ctx.fillStyle = "#d946ef";
+                    ctx.fillRect(-14, -12, 8, 8);
+                    ctx.fillRect(6, -12, 8, 8);
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(-12, -10, 4, 4);
+                    ctx.fillRect(8, -10, 4, 4);
+                } 
+                else if (this.worldNum === 4) {
+                    ctx.fillStyle = "#0284c7";
+                    ctx.fillRect(-34, -20, 68, 40);
+                    ctx.fillStyle = "#eab308";
+                    ctx.fillRect(-18, -26, 36, 6);
+                    ctx.fillRect(-24, -6, 8, 12);
+                    ctx.fillRect(16, -6, 8, 12);
+                    ctx.fillStyle = "#e0f2fe";
+                    ctx.fillRect(-15, -12, 8, 6);
+                    ctx.fillRect(7, -12, 8, 6);
+                    ctx.fillStyle = "#0369a1";
+                    ctx.fillRect(-46, 4, 12, 12);
+                } 
+                else if (this.worldNum === 5) {
+                    ctx.fillStyle = "#7f1d1d";
+                    ctx.fillRect(-30, -10, 60, 45);
+                    ctx.fillStyle = "#991b1b";
+                    ctx.fillRect(-24, -22, 48, 22);
+                    ctx.fillStyle = "#111827";
+                    ctx.fillRect(-22, -32, 8, 12);
+                    ctx.fillRect(14, -32, 8, 12);
+                    ctx.fillStyle = "#a855f7";
+                    ctx.fillRect(-14, -14, 10, 6);
+                    ctx.fillRect(4, -14, 10, 6);
+                    ctx.fillStyle = "#111827";
+                    const wingSwing = Math.sin(this.animFrame * 2) * 8;
+                    ctx.fillRect(-52, -15 + wingSwing, 22, 26);
+                    ctx.fillRect(30, -15 - wingSwing, 22, 26);
+                }
 
                 ctx.restore();
 
-                // Barra de vida do Boss
                 const barWidth = 240;
                 const barHeight = 15;
                 const barX = CANVAS_WIDTH / 2 - barWidth / 2;
@@ -1333,7 +1318,9 @@
                 ctx.font = "8px 'Press Start 2P'";
                 ctx.fillStyle = '#fff';
                 ctx.textAlign = 'center';
-                ctx.fillText("ANTIAKA", CANVAS_WIDTH / 2, barY + 11);
+                
+                let bossNames = ["", "AKINHA CORROMPIDO", "GOLEM DE AREIA", "ESPECTRO DE CRISTAL", "DRAGÃO CELESTIAL", "ANTIAKA"];
+                ctx.fillText(bossNames[this.worldNum], CANVAS_WIDTH / 2, barY + 11);
             }
 
             takeHit() {
@@ -1346,47 +1333,80 @@
                 createExplosionParticles(this.x + this.width/2, this.y + this.height/2, '#f59e0b', 30);
 
                 if (this.hp <= 0) {
-                    winGame();
-                } else {
-                    this.vx = (this.vx > 0 ? 1 : -1) * (5 + (3 - this.hp) * 2);
+                    createExplosionParticles(this.x + this.width/2, this.y + this.height/2, '#ef4444', 50);
+                    if (currentLevel === MAX_LEVELS) {
+                        winGame();
+                    } else {
+                        transitionToNextLevel();
+                    }
                 }
             }
         }
 
         class BossProjectile {
-            constructor(x, y, vx) {
+            constructor(x, y, vx, worldNum) {
                 this.x = x;
                 this.y = y;
                 this.width = 20;
                 this.height = 20;
                 this.vx = vx;
+                this.worldNum = worldNum;
                 this.rot = 0;
             }
             update() {
                 this.x += this.vx;
                 this.rot += 0.1;
+                
+                if (this.worldNum === 4) {
+                    if (player && player.y > this.y) this.y += 0.8;
+                }
             }
             draw() {
                 ctx.save();
                 ctx.translate(this.x + 10, this.y + 10);
                 ctx.rotate(this.rot);
-                // Bola de plasma maligno pixelada
-                ctx.fillStyle = "#a855f7";
-                ctx.fillRect(-10, -10, 20, 20);
-                ctx.fillStyle = "#f472b6";
-                ctx.fillRect(-6, -6, 12, 12);
+
+                if (this.worldNum === 1) {
+                    ctx.fillStyle = "#22c55e";
+                    ctx.fillRect(-8, -8, 16, 16);
+                    ctx.fillStyle = "#86efac";
+                    ctx.fillRect(-4, -4, 8, 8);
+                } 
+                else if (this.worldNum === 2) {
+                    ctx.fillStyle = "#ca8a04";
+                    ctx.fillRect(-10, -10, 20, 20);
+                    ctx.fillStyle = "#78350f";
+                    ctx.strokeRect(-10, -10, 20, 20);
+                } 
+                else if (this.worldNum === 3) {
+                    ctx.fillStyle = "#c084fc";
+                    ctx.beginPath();
+                    ctx.moveTo(0, -10);
+                    ctx.lineTo(8, 0);
+                    ctx.lineTo(0, 10);
+                    ctx.lineTo(-8, 0);
+                    ctx.closePath();
+                    ctx.fill();
+                } 
+                else if (this.worldNum === 4) {
+                    ctx.fillStyle = "#38bdf8";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(-3, -3, 6, 6);
+                } 
+                else {
+                    ctx.fillStyle = "#a855f7";
+                    ctx.fillRect(-10, -10, 20, 20);
+                    ctx.fillStyle = "#f472b6";
+                    ctx.fillRect(-6, -6, 12, 12);
+                }
+
                 ctx.restore();
             }
         }
 
-        // DISPARO DE EXPLOSÕES VISUAIS
-        function createExplosionParticles(x, y, color, count = 10) {
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle(x, y, color));
-            }
-        }
-
-        // INSTANCIAR / GERAR FASES PROCEDURAIS DE 5 MUNDOS
         function generateLevel(levelNum) {
             blocks = [];
             spikes = [];
@@ -1399,68 +1419,98 @@
             gameClouds = [];
 
             const wl = getWorldAndLevel(levelNum);
+            const isBossLevel = (levelNum % 5 === 0);
 
-            // Determinar estilo do bloco com base no mundo
             let blockStyle = "grass";
             if (wl.worldNum === 2) blockStyle = "desert";
             if (wl.worldNum === 3) blockStyle = "cave";
             if (wl.worldNum === 4) blockStyle = "sky";
             if (wl.worldNum === 5) blockStyle = "castle";
 
-            // Nuvens decorativas de fundo para planície e céu
-            if (wl.worldNum === 1 || wl.worldNum === 4) {
-                for (let i = 0; i < 6; i++) {
-                    gameClouds.push(new Cloud(Math.random() * 1500, Math.random() * 200 + 40, Math.random() * 0.4 + 0.1, Math.random() * 40 + 30));
-                }
-            }
-
-            // FASE FINAL - CONFRONTO FINAL (Fase 25)
-            if (levelNum === MAX_LEVELS) {
+            if (isBossLevel) {
                 levelWidth = CANVAS_WIDTH;
                 cameraX = 0;
 
-                // Arena Castle
                 for (let col = 0; col < CANVAS_WIDTH / TILE_SIZE; col++) {
-                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, "castle"));
-                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, "castle"));
+                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
+                    blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, blockStyle));
                 }
+
                 for (let row = 0; row < CANVAS_HEIGHT / TILE_SIZE; row++) {
-                    blocks.push(new Block(0, row * TILE_SIZE, "castle"));
-                    blocks.push(new Block(CANVAS_WIDTH - TILE_SIZE, row * TILE_SIZE, "castle"));
+                    blocks.push(new Block(0, row * TILE_SIZE, blockStyle));
+                    blocks.push(new Block(CANVAS_WIDTH - TILE_SIZE, row * TILE_SIZE, blockStyle));
                 }
 
-                // Firebars laterais para dificultar a luta do Boss
-                firebars.push(new Firebar(120, 200, 2, 0.01));
-                firebars.push(new Firebar(CANVAS_WIDTH - 160, 200, 2, -0.01));
+                if (levelNum === 5) {
+                    blocks.push(new Block(120, 240, "grass"));
+                    blocks.push(new Block(CANVAS_WIDTH - 160, 240, "grass"));
+                } 
+                else if (levelNum === 10) {
+                    blocks.push(new Block(CANVAS_WIDTH / 2 - TILE_SIZE, 240, "desert"));
+                    blocks.push(new Block(CANVAS_WIDTH / 2, 240, "desert"));
+                    firebars.push(new Firebar(CANVAS_WIDTH / 2 - TILE_SIZE / 2, CANVAS_HEIGHT - TILE_SIZE * 4, 2, 0.015));
+                } 
+                else if (levelNum === 15) {
+                    blocks.push(new Block(160, 200, "cave"));
+                    blocks.push(new Block(CANVAS_WIDTH - 200, 200, "cave"));
+                    spikes.push(new Spike(80, CANVAS_HEIGHT - TILE_SIZE * 3));
+                    spikes.push(new Spike(CANVAS_WIDTH - 120, CANVAS_HEIGHT - TILE_SIZE * 3));
+                } 
+                else if (levelNum === 20) {
+                    blocks = []; 
+                    for (let col = 0; col < 6; col++) {
+                        blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, "sky"));
+                    }
+                    for (let col = 14; col < CANVAS_WIDTH / TILE_SIZE; col++) {
+                        blocks.push(new Block(col * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, "sky"));
+                    }
+                    for (let row = 0; row < CANVAS_HEIGHT / TILE_SIZE; row++) {
+                        blocks.push(new Block(0, row * TILE_SIZE, "sky"));
+                        blocks.push(new Block(CANVAS_WIDTH - TILE_SIZE, row * TILE_SIZE, "sky"));
+                    }
+                    blocks.push(new Block(CANVAS_WIDTH / 2 - TILE_SIZE, 220, "sky"));
+                    blocks.push(new Block(CANVAS_WIDTH / 2, 220, "sky"));
+                } 
+                else if (levelNum === 25) {
+                    blocks.push(new Block(160, 240, "castle"));
+                    blocks.push(new Block(200, 240, "castle"));
+                    blocks.push(new Block(CANVAS_WIDTH - 240, 240, "castle"));
+                    blocks.push(new Block(CANVAS_WIDTH - 200, 240, "castle"));
 
-                boss = new Boss(CANVAS_WIDTH / 2 - 35, 100);
+                    firebars.push(new Firebar(120, 200, 2, 0.012));
+                    firebars.push(new Firebar(CANVAS_WIDTH - 160, 200, 2, -0.012));
+                }
+
+                boss = new Boss(CANVAS_WIDTH / 2 - 35, 100, wl.worldNum);
                 player = new Player(80, CANVAS_HEIGHT - 130);
                 return;
             }
 
-            // GERAÇÃO PROCEDURAL (Mundos 1 - 5)
             levelWidth = 1800 + levelNum * 150;
             cameraX = 0;
 
             const totalTiles = Math.floor(levelWidth / TILE_SIZE);
             let index = 0;
 
-            // Tipo de inimigo dependendo do mundo
+            if (wl.worldNum === 1 || wl.worldNum === 4) {
+                for (let i = 0; i < 6; i++) {
+                    gameClouds.push(new Cloud(Math.random() * 1500, Math.random() * 200 + 40, Math.random() * 0.4 + 0.1, Math.random() * 40 + 30));
+                }
+            }
+
             let enemyType = "alien";
             if (wl.worldNum === 3) enemyType = "ghost";
             if (wl.worldNum === 4 || wl.worldNum === 5) enemyType = "spider";
 
-            const enemySpeed = 0.6 + (levelNum * 0.02);
+            const enemySpeed = (1.3 + (levelNum * 0.04)) * 1.05;
 
             while (index < totalTiles) {
-                // Entrada segura
                 if (index < 5) {
                     blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
                     index++;
                     continue;
                 }
 
-                // Saída segura
                 if (index > totalTiles - 5) {
                     blocks.push(new Block(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE, blockStyle));
                     if (index === totalTiles - 2) {
@@ -1470,9 +1520,9 @@
                     continue;
                 }
 
-                const pitChance = wl.worldNum === 3 ? 0 : 0.02;
+                const pitChance = (wl.worldNum === 3 ? 0 : 0.08 + (levelNum * 0.005)) * 1.05;
                 if (Math.random() < pitChance && index > 6) {
-                    index += 1;
+                    index += Math.random() < 0.25 ? 2 : 1;
                     continue;
                 }
 
@@ -1480,27 +1530,27 @@
 
                 const randomVal = Math.random();
 
-                const spikeChance = wl.worldNum === 3 ? 0.03 : 0.02;
+                const spikeChance = (wl.worldNum === 3 ? 0.12 : 0.05 + (levelNum * 0.003)) * 1.05;
                 if (randomVal < spikeChance) {
                     spikes.push(new Spike(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2));
                 }
-                else if (randomVal < 0.35) {
+                else if (randomVal < 0.22) {
                     coins.push(new Coin(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 3));
                 }
-                else if (randomVal < 0.42) {
+                else if (randomVal < 0.30) {
                     enemies.push(new Enemy(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 2, enemyType, enemySpeed));
                 }
 
-                if (wl.worldNum >= 2 && Math.random() < 0.015) {
-                    firebars.push(new Firebar(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 4, 2, 0.01 * (Math.random() < 0.5 ? 1 : -1)));
+                if (wl.worldNum >= 2 && Math.random() < 0.045) {
+                    firebars.push(new Firebar(index * TILE_SIZE, CANVAS_HEIGHT - TILE_SIZE * 4, 2, 0.018 * (Math.random() < 0.5 ? 1 : -1)));
                 }
 
-                if (Math.random() < 0.20) {
+                if (Math.random() < 0.15) {
                     const platHeight = CANVAS_HEIGHT - TILE_SIZE * 4;
-                    const platLength = Math.floor(Math.random() * 3) + 3;
+                    const platLength = Math.floor(Math.random() * 3) + 2;
                     for (let p = 0; p < platLength; p++) {
                         blocks.push(new Block((index + p) * TILE_SIZE, platHeight, blockStyle));
-                        if (Math.random() < 0.6) {
+                        if (Math.random() < 0.4) {
                             coins.push(new Coin((index + p) * TILE_SIZE, platHeight - TILE_SIZE));
                         }
                     }
@@ -1512,7 +1562,6 @@
             player = new Player(80, CANVAS_HEIGHT - 120);
         }
 
-        // SISTEMA DE HUD
         function updateHUD() {
             hudLevel.innerText = formatLevelString(currentLevel);
             hudScore.innerText = String(score).padStart(5, '0');
@@ -1524,7 +1573,6 @@
             hudLives.innerText = heartString;
         }
 
-        // TRANSIÇÃO DE NÍVEL
         function transitionToNextLevel() {
             if (currentLevel < MAX_LEVELS) {
                 currentLevel++;
@@ -1548,7 +1596,6 @@
             }
         }
 
-        // ENTRADA NO MENU PRINCIPAL
         async function showMenu() {
             gameState = 'MENU';
             sfx.stopBGM();
@@ -1561,7 +1608,6 @@
             refreshFocusableButtons();
         }
 
-        // INÍCIO DO JOGO (NOVA JORNADA)
         function startGame() {
             sfx.init();
             sfx.startBGM();
@@ -1585,7 +1631,6 @@
             updateHUD();
         }
 
-        // CONTINUAR JORNADA
         function continueGame() {
             sfx.init();
             sfx.startBGM();
@@ -1605,7 +1650,6 @@
             updateHUD();
         }
 
-        // FIM DE JOGO
         function gameOver() {
             gameState = 'GAMEOVER';
             sfx.stopBGM();
@@ -1628,7 +1672,6 @@
             refreshFocusableButtons();
         }
 
-        // VITÓRIA TOTAL
         function winGame() {
             gameState = 'VICTORY';
             sfx.stopBGM();
@@ -1648,8 +1691,20 @@
 
         function gameLoop() {
             pollGamepad();
-            update();
-            render();
+            
+            // Try/Catch isolados para garantir que nada pare a renderização física do loop
+            try {
+                update();
+            } catch (error) {
+                console.error("Erro interno detectado no update do frame:", error);
+            }
+
+            try {
+                render();
+            } catch (error) {
+                console.error("Erro interno detectado na renderização do frame:", error);
+            }
+
             requestAnimationFrame(gameLoop);
         }
 
@@ -1683,17 +1738,16 @@
                 return;
             }
 
-            // Atualizar Nuvens
             for (let cloud of gameClouds) {
                 cloud.update();
             }
 
-            // Atualizar Jogador
             if (player) {
                 player.update();
             }
 
-            if (player && currentLevel < MAX_LEVELS) {
+            const isBossLevel = (currentLevel % 5 === 0);
+            if (player && !isBossLevel) {
                 cameraX = player.x - CANVAS_WIDTH / 3;
                 if (cameraX < 0) cameraX = 0;
                 if (cameraX > levelWidth - CANVAS_WIDTH) cameraX = levelWidth - CANVAS_WIDTH;
@@ -1701,7 +1755,6 @@
                 cameraX = 0;
             }
 
-            // Atualizar Inimigos Comuns
             for (let i = enemies.length - 1; i >= 0; i--) {
                 let enemy = enemies[i];
                 enemy.update();
@@ -1720,7 +1773,6 @@
                 }
             }
 
-            // Atualizar Firebars
             for (let fb of firebars) {
                 fb.update();
                 if (player && fb.checkPlayerCollision(player)) {
@@ -1728,7 +1780,6 @@
                 }
             }
 
-            // Moedas / Estrelas
             for (let i = coins.length - 1; i >= 0; i--) {
                 let coin = coins[i];
                 if (player && player.checkCollision(player, coin)) {
@@ -1738,21 +1789,19 @@
                     sfx.playCoin();
                     createExplosionParticles(coin.x + 12, coin.y + 12, '#fbbf24', 8);
 
-                    if (currentLevel < MAX_LEVELS && player.x > levelWidth - 150) {
+                    if (!isBossLevel && player.x > levelWidth - 150) {
                         transitionToNextLevel();
                         return;
                     }
                 }
             }
 
-            // Espinhos
             for (let spike of spikes) {
                 if (player && player.checkCollision(player, spike)) {
                     player.takeDamage();
                 }
             }
 
-            // Partículas
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 if (particles[i].alpha <= 0) {
@@ -1760,8 +1809,7 @@
                 }
             }
 
-            // Lógica do CHEFE (Fase 25)
-            if (currentLevel === MAX_LEVELS && boss) {
+            if (isBossLevel && boss) {
                 boss.update();
 
                 if (player && player.checkCollision(player, boss)) {
@@ -1790,22 +1838,18 @@
             }
         }
 
-        // RENDERIZAÇÃO
         function render() {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
             const wl = getWorldAndLevel(currentLevel);
 
-            // DESENHAR DEGRADÊ DO CÉU DO MUNDO ATUAL
             const skyGrad = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
             skyGrad.addColorStop(0, wl.sky[0]);
             skyGrad.addColorStop(1, wl.sky[1]);
             ctx.fillStyle = skyGrad;
             ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-            // Elementos de fundo específicos por Mundo
             if (wl.worldNum === 2) {
-                // Desenhar o sol gigante do deserto
                 ctx.fillStyle = "rgba(253, 224, 71, 0.25)";
                 ctx.beginPath();
                 ctx.arc(CANVAS_WIDTH - 120, 100, 75, 0, Math.PI * 2);
@@ -1815,65 +1859,54 @@
             ctx.save();
             ctx.translate(-cameraX, 0);
 
-            // Nuvens decorativas
             for (let cloud of gameClouds) {
                 cloud.draw();
             }
 
-            // Espinhos
             for (let spike of spikes) {
                 spike.draw();
             }
 
-            // Firebars
             for (let fb of firebars) {
                 fb.draw();
             }
 
-            // Blocos de Plataformas
             for (let block of blocks) {
                 block.draw();
             }
 
-            // Moedas
             for (let coin of coins) {
                 coin.draw();
             }
 
-            // Desenhar Bandeira Final Pixelada no fim do nível
-            if (currentLevel < MAX_LEVELS) {
-                ctx.fillStyle = "#ef4444"; // Bandeira vermelha
+            const isBossLevel = (currentLevel % 5 === 0);
+            if (!isBossLevel) {
+                ctx.fillStyle = "#ef4444";
                 ctx.fillRect(levelWidth - 100, CANVAS_HEIGHT - TILE_SIZE * 3.1, 28, 16);
-                ctx.fillStyle = "#ffffff"; // Haste branca
+                ctx.fillStyle = "#ffffff";
                 ctx.fillRect(levelWidth - 100, CANVAS_HEIGHT - TILE_SIZE * 3.1, 4, 44);
             }
 
-            // Inimigos
             for (let enemy of enemies) {
                 enemy.draw();
             }
 
-            // Projéteis do Boss
             for (let proj of bossProjectiles) {
                 proj.draw();
             }
 
-            // Jogador
             if (player) {
                 player.draw();
             }
 
-            // Partículas FX
             for (let particle of particles) {
                 particle.draw();
             }
 
-            // Elemento de primeiro plano: Lava borbulhante do Castelo (Mundo 5)
             if (wl.worldNum === 5) {
-                ctx.fillStyle = "rgba(239, 68, 68, 0.85)"; // Lava vermelha
+                ctx.fillStyle = "rgba(239, 68, 68, 0.85)";
                 const wave = Math.sin(Date.now() / 150) * 3;
                 ctx.fillRect(cameraX, CANVAS_HEIGHT - 20 + wave, CANVAS_WIDTH, 20);
-                // Detalhe de bolhas
                 ctx.fillStyle = "#f97316";
                 ctx.fillRect(cameraX + 240, CANVAS_HEIGHT - 16 + wave, 6, 6);
                 ctx.fillRect(cameraX + 540, CANVAS_HEIGHT - 12 + wave, 4, 4);
@@ -1881,9 +1914,14 @@
 
             ctx.restore();
 
-            // Renderizar Boss (Fora do scroll)
-            if (currentLevel === MAX_LEVELS && boss) {
+            if (isBossLevel && boss) {
                 boss.draw();
+            }
+        }
+
+        function createExplosionParticles(x, y, color, count = 10) {
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle(x, y, color));
             }
         }
 
@@ -1897,7 +1935,7 @@
                         showContinueButton(savedProgress.currentLevel);
                     }
                 } catch (e) {
-                    console.error("Falha no parse inicial de save local:", e);
+                    console.error("Falha ao ler save local no carregamento:", e);
                 }
             }
             initFirebase();
